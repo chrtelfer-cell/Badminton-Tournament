@@ -1,8 +1,403 @@
 {
-  "_meta": { "updatedAt": "Not yet published" },
-  "Boys Singles": { "matches": [] },
-  "Girls Singles": { "matches": [] },
-  "Boys Doubles": { "matches": [] },
-  "Girls Doubles": { "matches": [] },
-  "Mixed Doubles": { "matches": [] }
+  "_meta": {
+    "updatedAt": "3/5/2026, 2:58:38 PM"
+  },
+  "Boys Singles": {
+    "matches": [
+      {
+        "id": "W1-1",
+        "round": "W1",
+        "team1": "Oneida",
+        "team2": "Caledonia Centennial",
+        "winner": "Oneida"
+      },
+      {
+        "id": "W1-2",
+        "round": "W1",
+        "team1": "Mapleview",
+        "team2": "BYE",
+        "winner": "Mapleview"
+      },
+      {
+        "id": "W1-3",
+        "round": "W1",
+        "team1": "Jarvis",
+        "team2": "Rainham",
+        "winner": "Jarvis"
+      },
+      {
+        "id": "W1-4",
+        "round": "W1",
+        "team1": "J. L. Mitchener",
+        "team2": "Thompson Creek",
+        "winner": "Thompson Creek"
+      },
+      {
+        "id": "W1-5",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "Seneca",
+        "winner": "Seneca"
+      },
+      {
+        "id": "W1-6",
+        "round": "W1",
+        "team1": "Grand River",
+        "team2": "BYE",
+        "winner": "Grand River"
+      },
+      {
+        "id": "W1-7",
+        "round": "W1",
+        "team1": "Walpole",
+        "team2": "BYE",
+        "winner": "Walpole"
+      },
+      {
+        "id": "W1-8",
+        "round": "W1",
+        "team1": "Hagersville",
+        "team2": "River Heights",
+        "winner": "Hagersville"
+      },
+      {
+        "id": "W2-1",
+        "round": "W2",
+        "team1": "Oneida",
+        "team2": "Mapleview",
+        "winner": null
+      },
+      {
+        "id": "W2-2",
+        "round": "W2",
+        "team1": "Jarvis",
+        "team2": "Thompson Creek",
+        "winner": null
+      },
+      {
+        "id": "W2-3",
+        "round": "W2",
+        "team1": "Seneca",
+        "team2": "Grand River",
+        "winner": null
+      },
+      {
+        "id": "W2-4",
+        "round": "W2",
+        "team1": "Walpole",
+        "team2": "Hagersville",
+        "winner": null
+      },
+      {
+        "id": "W3-1",
+        "round": "W3",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "W3-2",
+        "round": "W3",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "W4-1",
+        "round": "W4",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L1-1",
+        "round": "L1",
+        "team1": "Caledonia Centennial",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "L1-2",
+        "round": "L1",
+        "team1": "Rainham",
+        "team2": "J. L. Mitchener",
+        "winner": null
+      },
+      {
+        "id": "L1-3",
+        "round": "L1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "L1-4",
+        "round": "L1",
+        "team1": "BYE",
+        "team2": "River Heights",
+        "winner": null
+      },
+      {
+        "id": "L2-1",
+        "round": "L2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L2-2",
+        "round": "L2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L2-3",
+        "round": "L2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L2-4",
+        "round": "L2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L3-1",
+        "round": "L3",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L3-2",
+        "round": "L3",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L4-1",
+        "round": "L4",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L4-2",
+        "round": "L4",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L5-1",
+        "round": "L5",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L6-1",
+        "round": "L6",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "GF-1",
+        "round": "GF",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      }
+    ]
+  },
+  "Girls Singles": {
+    "matches": [
+      {
+        "id": "W1-1",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "W1-2",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "W2-1",
+        "round": "W2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L1-1",
+        "round": "L1",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L2-1",
+        "round": "L2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "GF-1",
+        "round": "GF",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      }
+    ]
+  },
+  "Boys Doubles": {
+    "matches": [
+      {
+        "id": "W1-1",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "W1-2",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "W2-1",
+        "round": "W2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L1-1",
+        "round": "L1",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L2-1",
+        "round": "L2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "GF-1",
+        "round": "GF",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      }
+    ]
+  },
+  "Girls Doubles": {
+    "matches": [
+      {
+        "id": "W1-1",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "W1-2",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "W2-1",
+        "round": "W2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L1-1",
+        "round": "L1",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L2-1",
+        "round": "L2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "GF-1",
+        "round": "GF",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      }
+    ]
+  },
+  "Mixed Doubles": {
+    "matches": [
+      {
+        "id": "W1-1",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "W1-2",
+        "round": "W1",
+        "team1": "BYE",
+        "team2": "BYE",
+        "winner": null
+      },
+      {
+        "id": "W2-1",
+        "round": "W2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L1-1",
+        "round": "L1",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "L2-1",
+        "round": "L2",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      },
+      {
+        "id": "GF-1",
+        "round": "GF",
+        "team1": null,
+        "team2": null,
+        "winner": null
+      }
+    ]
+  }
 }
