@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Badminton Tournament – Live Brackets</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#fff; --ink:#111; --muted:#555; --line:#ddd;
+    --pill:#eef2ff; --accent:#1f60d6;
+  }
+  body{font-family:system-ui,Segoe UI,Arial,sans-serif;margin:18px;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:1200px;margin:0 auto}
+  h1{margin:0 0 6px}
+  .sub{margin:0 0 14px;color:var(--muted)}
+  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .tab{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);cursor:pointer}
+  .tab.active{border-color:#333}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px;color:var(--muted);font-size:.95rem}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--pill);border:1px solid #c7d2fe;color:#1e3a8a}
+  .error{padding:10px;border:1px solid #fecaca;background:#fff1f2;border-radius:10px;color:#991b1b}
+  .bracket{display:grid;grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:start}
+  @media(max-width:980px){ .bracket{grid-template-columns:1fr} }
+  .round{border:1px dashed var(--line);border-radius:12px;padding:12px}
+  .round h3{margin:0 0 10px;font-size:1rem;color:#334155}
+  .match{border:1px solid var(--line);border-radius:10px;padding:10px;margin:10px 0}
+  .team{display:flex;justify-content:space-between;gap:10px;padding:6px 8px;border-radius:8px}
+  .team.win{background:#ecfdf5;border:1px solid #bbf7d0}
+  .team.lose{opacity:.75}
+  .vs{color:var(--muted);font-size:.9rem;margin:6px 0;text-align:center}
+  .small{color:var(--muted);font-size:.9rem}
+  .legend{display:flex;gap:10px;flex-wrap:wrap}
+  .dot{width:10px;height:10px;border-radius:999px;display:inline-block;margin-right:6px}
+  .dot.win{background:#22c55e}
+  .dot.pending{background:#94a3b8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🏸 Badminton Tournament – Live Brackets</h1>
+  <p class="sub">Auto-refreshes every 30 seconds. Showing <b>school names only</b>.</p>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="card">
+    <div id="status" class="meta">
+      <span class="pill" id="lastUpdated">Loading…</span>
+      <span class="legend small">
+        <span><span class="dot win"></span>Winner chosen</span>
+        <span><span class="dot pending"></span>Not decided</span>
+      </span>
+    </div>
+    <div id="content" style="margin-top:14px"></div>
+  </div>
+</div>
+
+<script>
+const DIV_KEYS = [
+  "Boys Singles",
+  "Girls Singles",
+  "Boys Doubles",
+  "Girls Doubles",
+  "Mixed Doubles"
+];
+
+let results = null;
+let activeDiv = DIV_KEYS[0];
+
+function el(tag, attrs={}, html=""){
+  const n = document.createElement(tag);
+  Object.entries(attrs).forEach(([k,v]) => n.setAttribute(k, v));
+  if(html) n.innerHTML = html;
+  return n;
+}
+
+function renderTabs(){
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  DIV_KEYS.forEach(key=>{
+    const t = el("div", {class:"tab" + (key===activeDiv?" active":"")});
+    t.textContent = key;
+    t.onclick = ()=>{ activeDiv=key; render(); renderTabs(); };
+    tabs.appendChild(t);
+  });
+}
+
+function groupRounds(matches){
+  // Expect matches to have round labels like: "W1", "W2", "L1", "L2", "GF"
+  const groups = {};
+  for(const m of matches){
+    const r = m.round || "Round";
+    if(!groups[r]) groups[r] = [];
+    groups[r].push(m);
+  }
+  // stable-ish ordering: Winners rounds first, Losers, then Grand Final
+  const order = Object.keys(groups).sort((a,b)=>{
+    const rank = (x)=>{
+      if(x.startsWith("W")) return 1;
+      if(x.startsWith("L")) return 2;
+      if(x === "GF") return 3;
+      return 9;
+    };
+    const ra = rank(a), rb = rank(b);
+    if(ra !== rb) return ra - rb;
+    // numeric compare if possible
+    const na = parseInt(a.slice(1),10), nb = parseInt(b.slice(1),10);
+    if(!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+    return a.localeCompare(b);
+  });
+  return order.map(k=>({round:k, matches:groups[k]}));
+}
+
+function teamRow(name, isWinner){
+  const cls = "team" + (isWinner ? " win" : "");
+  return `<div class="${cls}"><span>${escapeHtml(name)}</span>${isWinner?'<b>W</b>':""}</div>`;
+}
+
+function escapeHtml(s){
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function render(){
+  const content = document.getElementById("content");
+  if(!results){
+    content.innerHTML = `<div class="error">No results loaded yet.</div>`;
+    return;
+  }
+  const div = results[activeDiv];
+  if(!div){
+    content.innerHTML = `<div class="error">Division not found in results_public.json: ${escapeHtml(activeDiv)}</div>`;
+    return;
+  }
+
+  const rounds = groupRounds(div.matches || []);
+  if(rounds.length === 0){
+    content.innerHTML = `<div class="small">No bracket generated yet for this division.</div>`;
+    return;
+  }
+
+  const bracket = el("div", {class:"bracket"});
+  rounds.forEach(r=>{
+    const box = el("div", {class:"round"});
+    box.appendChild(el("h3", {}, `${r.round === "GF" ? "Grand Final" : r.round}`));
+    r.matches.forEach(m=>{
+      const winner = m.winner || null;
+      const aWin = winner && winner === m.team1;
+      const bWin = winner && winner === m.team2;
+
+      const match = el("div", {class:"match"});
+      match.innerHTML =
+        teamRow(m.team1 || "TBD", aWin) +
+        `<div class="vs">vs</div>` +
+        teamRow(m.team2 || "TBD", bWin) +
+        `<div class="small" style="margin-top:8px;color:#64748b">${winner ? "Winner: " + escapeHtml(winner) : "Winner: —"}</div>`;
+      bracket.appendChild(match);
+    });
+    bracket.appendChild(box);
+  });
+
+  content.innerHTML = "";
+  content.appendChild(bracket);
+
+  document.getElementById("lastUpdated").textContent =
+    results._meta?.updatedAt ? `Updated: ${results._meta.updatedAt}` : "Updated: (timestamp missing)";
+}
+
+async function loadResults(){
+  try{
+    // cache-bust querystring to force fresh fetch
+    const r = await fetch("results_public.json?cb=" + Date.now(), {cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    results = await r.json();
+    renderTabs();
+    render();
+  }catch(e){
+    document.getElementById("content").innerHTML =
+      `<div class="error"><b>Could not load results_public.json</b><br>
+      Make sure viewer.html and results_public.json are in the same public folder.<br>
+      Error: ${escapeHtml(e.message || e)}</div>`;
+  }
+}
+
+loadResults();
+setInterval(loadResults, 30000);
+</script>
+</body>
+</html>
