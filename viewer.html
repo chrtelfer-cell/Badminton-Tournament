@@ -18,38 +18,41 @@
 
 body{
   font-family:system-ui,Segoe UI,Arial,sans-serif;
-  margin:18px;
+  margin:14px;
   background:var(--bg);
   color:var(--ink);
+  font-size:14px;
 }
 
 .wrap{
-  max-width:1900px;
+  max-width:1800px;
   margin:0 auto;
 }
 
 h1{
   margin:0 0 6px;
+  font-size:1.6rem;
 }
 
 .sub{
-  margin:0 0 14px;
+  margin:0 0 12px;
   color:var(--muted);
 }
 
 .tabs{
   display:flex;
-  gap:10px;
+  gap:8px;
   flex-wrap:wrap;
-  margin:14px 0;
+  margin:12px 0;
 }
 
 .tab{
-  padding:10px 12px;
+  padding:8px 10px;
   border-radius:10px;
   border:1px solid var(--line);
   background:var(--card);
   cursor:pointer;
+  font-size:.95rem;
 }
 
 .tab.active{
@@ -61,8 +64,9 @@ h1{
   background:var(--card);
   border:1px solid var(--line);
   border-radius:12px;
-  padding:14px;
-  margin-bottom:16px;
+  padding:12px;
+  margin-bottom:14px;
+  overflow-x:auto;
 }
 
 .meta{
@@ -70,9 +74,8 @@ h1{
   gap:10px;
   flex-wrap:wrap;
   align-items:center;
-  margin-top:10px;
   color:var(--muted);
-  font-size:.95rem;
+  font-size:.92rem;
 }
 
 .pill{
@@ -85,26 +88,27 @@ h1{
 }
 
 .section-title{
-  margin:0 0 12px;
-  font-size:1.1rem;
+  margin:0 0 10px;
+  font-size:1rem;
 }
 
 .bracket-grid{
   display:flex;
-  gap:36px;
+  gap:20px;
   align-items:flex-start;
-  overflow-x:auto;
-  padding-bottom:12px;
+  min-width:max-content;
+  padding-bottom:4px;
 }
 
 .round-col{
-  min-width:250px;
-  flex:0 0 250px;
+  width:190px;
+  min-width:190px;
+  flex:0 0 190px;
 }
 
 .round-col h3{
-  margin:0 0 12px;
-  font-size:1rem;
+  margin:0 0 8px;
+  font-size:.9rem;
   color:#334155;
   text-align:center;
 }
@@ -122,19 +126,20 @@ h1{
 .match{
   background:#fff;
   border:1px solid var(--line);
-  border-radius:10px;
+  border-radius:8px;
   overflow:hidden;
   box-shadow:0 1px 1px rgba(0,0,0,.03);
 }
 
 .team{
-  padding:10px 12px;
+  padding:7px 9px;
   border-bottom:1px solid #eef2f7;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:8px;
-  min-height:22px;
+  gap:6px;
+  min-height:18px;
+  font-size:.8rem;
 }
 
 .team:last-child{
@@ -144,17 +149,18 @@ h1{
 .team.win{
   background:var(--win);
   border-left:4px solid var(--win-border);
-  padding-left:8px;
+  padding-left:5px;
 }
 
 .winner-mark{
   font-weight:700;
   color:#15803d;
+  flex:0 0 auto;
 }
 
 .match-footer{
-  padding:8px 12px;
-  font-size:.85rem;
+  padding:6px 9px;
+  font-size:.72rem;
   color:#64748b;
   border-top:1px solid #eef2f7;
   background:#fafbfd;
@@ -162,7 +168,7 @@ h1{
 
 .small{
   color:var(--muted);
-  font-size:.9rem;
+  font-size:.88rem;
 }
 
 .legend{
@@ -188,6 +194,14 @@ h1{
   background:#fff1f2;
   border-radius:10px;
   color:#991b1b;
+}
+
+@media (max-width: 900px){
+  .round-col{
+    width:175px;
+    min-width:175px;
+    flex-basis:175px;
+  }
 }
 </style>
 </head>
@@ -237,23 +251,23 @@ const DIV_KEYS = [
 let results = null;
 let activeDiv = DIV_KEYS[0];
 
-const MATCH_HEIGHT = 110;
-const DEFAULT_STEP = 126;
+const MATCH_HEIGHT = 78;
+const DEFAULT_STEP = 90;
 
 const ROUND_STEPS = {
-  W1: 126,
-  W2: 252,
-  W3: 504,
-  W4: 1008,
+  W1: 82,
+  W2: 164,
+  W3: 328,
+  W4: 656,
 
-  L1: 126,
-  L2: 180,
-  L3: 252,
-  L4: 360,
-  L5: 504,
-  L6: 720,
+  L1: 82,
+  L2: 110,
+  L3: 164,
+  L4: 220,
+  L5: 328,
+  L6: 440,
 
-  GF: 126
+  GF: 82
 };
 
 function escapeHtml(s){
