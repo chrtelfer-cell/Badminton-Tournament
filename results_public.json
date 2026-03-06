@@ -1,1074 +1,2039 @@
 {
   "_meta": {
-    "updatedAt": "3/6/2026, 1:01:59 PM"
+    "updatedAt": "3/6/2026, 2:42:00 PM"
   },
   "Boys Singles": {
+    "shellSize": 16,
     "matches": [
       {
         "id": "W1-1",
         "round": "W1",
-        "team1": "Rainham",
+        "team1": "Oneida",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 1
+        }
       },
       {
         "id": "W1-2",
         "round": "W1",
-        "team1": "Robert Lang",
-        "team2": "Hagersville",
-        "winner": null
+        "team1": "Rainham",
+        "team2": "Caledonia Centennial",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 2
+        }
       },
       {
         "id": "W1-3",
         "round": "W1",
-        "team1": "Caledonia Centennial",
-        "team2": "Thompson Creek",
-        "winner": null
+        "team1": "Mapleview",
+        "team2": "Hagersville",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 1
+        }
       },
       {
         "id": "W1-4",
         "round": "W1",
-        "team1": "Grand River",
-        "team2": "Jarvis",
-        "winner": null
+        "team1": "BYE",
+        "team2": "Grand River",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 2
+        }
       },
       {
         "id": "W1-5",
         "round": "W1",
-        "team1": "Mapleview",
-        "team2": "River Heights",
-        "winner": null
+        "team1": "Thompson Creek",
+        "team2": "BYE",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 1
+        }
       },
       {
         "id": "W1-6",
         "round": "W1",
-        "team1": "Seneca",
-        "team2": "Oneida",
-        "winner": null
+        "team1": "Walpole North",
+        "team2": "Jarvis",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 2
+        }
       },
       {
         "id": "W1-7",
         "round": "W1",
         "team1": "J. L. Mitchener",
-        "team2": "IL Thomas",
-        "winner": null
+        "team2": "Seneca Central",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 1
+        }
       },
       {
         "id": "W1-8",
         "round": "W1",
         "team1": "BYE",
-        "team2": "Walpole",
-        "winner": null
+        "team2": "River Heights",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 2
+        }
       },
       {
         "id": "W2-1",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-1",
+          "slot": 1
+        }
       },
       {
         "id": "W2-2",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-2",
+          "slot": 1
+        }
       },
       {
         "id": "W2-3",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-3",
+          "slot": 1
+        }
       },
       {
         "id": "W2-4",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-4",
+          "slot": 1
+        }
       },
       {
         "id": "W3-1",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L4-1",
+          "slot": 1
+        }
       },
       {
         "id": "W3-2",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L4-2",
+          "slot": 1
+        }
       },
       {
         "id": "W4-1",
         "round": "W4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L6-1",
+          "slot": 1
+        }
       },
       {
         "id": "L1-1",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-2",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-3",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-3",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-4",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-4",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-1",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-2",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-3",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-4",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-1",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-2",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L4-1",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L4-2",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L5-1",
         "round": "L5",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L6-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L6-1",
         "round": "L6",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "GF-1",
         "round": "GF",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": null,
+        "nextLose": null
       }
     ]
   },
   "Girls Singles": {
+    "shellSize": 16,
     "matches": [
       {
         "id": "W1-1",
         "round": "W1",
-        "team1": "Mapleview",
+        "team1": "Caledonia Centennial",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 1
+        }
       },
       {
         "id": "W1-2",
         "round": "W1",
-        "team1": "Oneida",
-        "team2": "Rainham",
-        "winner": null
+        "team1": "Jarvis",
+        "team2": "J. L. Mitchener",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 2
+        }
       },
       {
         "id": "W1-3",
         "round": "W1",
-        "team1": "Thompson Creek",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Mapleview",
+        "team2": "Hagersville",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 1
+        }
       },
       {
         "id": "W1-4",
         "round": "W1",
         "team1": "BYE",
-        "team2": "Seneca",
-        "winner": null
+        "team2": "Walpole North",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 2
+        }
       },
       {
         "id": "W1-5",
         "round": "W1",
-        "team1": "Robert Lang",
+        "team1": "River Heights",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 1
+        }
       },
       {
         "id": "W1-6",
         "round": "W1",
-        "team1": "River Heights",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Seneca Central",
+        "team2": "Thompson Creek",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 2
+        }
       },
       {
         "id": "W1-7",
         "round": "W1",
-        "team1": "IL Thomas",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Grand River",
+        "team2": "Rainham",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 1
+        }
       },
       {
         "id": "W1-8",
         "round": "W1",
         "team1": "BYE",
-        "team2": "Walpole",
-        "winner": null
+        "team2": "Oneida",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 2
+        }
       },
       {
         "id": "W2-1",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-1",
+          "slot": 1
+        }
       },
       {
         "id": "W2-2",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-2",
+          "slot": 1
+        }
       },
       {
         "id": "W2-3",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-3",
+          "slot": 1
+        }
       },
       {
         "id": "W2-4",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-4",
+          "slot": 1
+        }
       },
       {
         "id": "W3-1",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L4-1",
+          "slot": 1
+        }
       },
       {
         "id": "W3-2",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L4-2",
+          "slot": 1
+        }
       },
       {
         "id": "W4-1",
         "round": "W4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L6-1",
+          "slot": 1
+        }
       },
       {
         "id": "L1-1",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-2",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-3",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-3",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-4",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-4",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-1",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-2",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-3",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-4",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-1",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-2",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L4-1",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L4-2",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L5-1",
         "round": "L5",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L6-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L6-1",
         "round": "L6",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "GF-1",
         "round": "GF",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": null,
+        "nextLose": null
       }
     ]
   },
   "Boys Doubles": {
+    "shellSize": 16,
     "matches": [
       {
         "id": "W1-1",
         "round": "W1",
-        "team1": "Seneca",
+        "team1": "Seneca Central",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 1
+        }
       },
       {
         "id": "W1-2",
         "round": "W1",
-        "team1": "Oneida",
-        "team2": "Robert Lang",
-        "winner": null
+        "team1": "Thompson Creek",
+        "team2": "Oneida",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 2
+        }
       },
       {
         "id": "W1-3",
         "round": "W1",
-        "team1": "Thompson Creek",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Jarvis",
+        "team2": "Hagersville",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 1
+        }
       },
       {
         "id": "W1-4",
         "round": "W1",
         "team1": "BYE",
-        "team2": "IL Thomas",
-        "winner": null
+        "team2": "Rainham",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 2
+        }
       },
       {
         "id": "W1-5",
         "round": "W1",
-        "team1": "Mapleview",
+        "team1": "J. L. Mitchener",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 1
+        }
       },
       {
         "id": "W1-6",
         "round": "W1",
-        "team1": "Rainham",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Mapleview",
+        "team2": "Grand River",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 2
+        }
       },
       {
         "id": "W1-7",
         "round": "W1",
-        "team1": "Walpole",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Walpole North",
+        "team2": "River Heights",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 1
+        }
       },
       {
         "id": "W1-8",
         "round": "W1",
         "team1": "BYE",
-        "team2": "River Heights",
-        "winner": null
+        "team2": "Caledonia Centennial",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 2
+        }
       },
       {
         "id": "W2-1",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-1",
+          "slot": 1
+        }
       },
       {
         "id": "W2-2",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-2",
+          "slot": 1
+        }
       },
       {
         "id": "W2-3",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-3",
+          "slot": 1
+        }
       },
       {
         "id": "W2-4",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-4",
+          "slot": 1
+        }
       },
       {
         "id": "W3-1",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L4-1",
+          "slot": 1
+        }
       },
       {
         "id": "W3-2",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L4-2",
+          "slot": 1
+        }
       },
       {
         "id": "W4-1",
         "round": "W4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L6-1",
+          "slot": 1
+        }
       },
       {
         "id": "L1-1",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-2",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-3",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-3",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-4",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-4",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-1",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-2",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-3",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-4",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-1",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-2",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L4-1",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L4-2",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L5-1",
         "round": "L5",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L6-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L6-1",
         "round": "L6",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "GF-1",
         "round": "GF",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": null,
+        "nextLose": null
       }
     ]
   },
   "Girls Doubles": {
+    "shellSize": 16,
     "matches": [
       {
         "id": "W1-1",
         "round": "W1",
-        "team1": "Mapleview",
+        "team1": "River Heights",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 1
+        }
       },
       {
         "id": "W1-2",
         "round": "W1",
-        "team1": "Rainham",
-        "team2": "River Heights",
-        "winner": null
+        "team1": "Hagersville",
+        "team2": "Seneca Central",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 2
+        }
       },
       {
         "id": "W1-3",
         "round": "W1",
-        "team1": "IL Thomas",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Oneida",
+        "team2": "Thompson Creek",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 1
+        }
       },
       {
         "id": "W1-4",
         "round": "W1",
         "team1": "BYE",
-        "team2": "Walpole",
-        "winner": null
+        "team2": "Rainham",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 2
+        }
       },
       {
         "id": "W1-5",
         "round": "W1",
-        "team1": "Seneca",
+        "team1": "Caledonia Centennial",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 1
+        }
       },
       {
         "id": "W1-6",
         "round": "W1",
-        "team1": "Thompson Creek",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Jarvis",
+        "team2": "Walpole North",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 2
+        }
       },
       {
         "id": "W1-7",
         "round": "W1",
-        "team1": "Robert Lang",
-        "team2": "BYE",
-        "winner": null
+        "team1": "J. L. Mitchener",
+        "team2": "Mapleview",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 1
+        }
       },
       {
         "id": "W1-8",
         "round": "W1",
         "team1": "BYE",
-        "team2": "Oneida",
-        "winner": null
+        "team2": "Grand River",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 2
+        }
       },
       {
         "id": "W2-1",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-1",
+          "slot": 1
+        }
       },
       {
         "id": "W2-2",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-2",
+          "slot": 1
+        }
       },
       {
         "id": "W2-3",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-3",
+          "slot": 1
+        }
       },
       {
         "id": "W2-4",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-4",
+          "slot": 1
+        }
       },
       {
         "id": "W3-1",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L4-1",
+          "slot": 1
+        }
       },
       {
         "id": "W3-2",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L4-2",
+          "slot": 1
+        }
       },
       {
         "id": "W4-1",
         "round": "W4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L6-1",
+          "slot": 1
+        }
       },
       {
         "id": "L1-1",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-2",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-3",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-3",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-4",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-4",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-1",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-2",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-3",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-4",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-1",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-2",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L4-1",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L4-2",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L5-1",
         "round": "L5",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L6-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L6-1",
         "round": "L6",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "GF-1",
         "round": "GF",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": null,
+        "nextLose": null
       }
     ]
   },
   "Mixed Doubles": {
+    "shellSize": 16,
     "matches": [
       {
         "id": "W1-1",
         "round": "W1",
-        "team1": "Mapleview",
+        "team1": "Grand River",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 1
+        }
       },
       {
         "id": "W1-2",
         "round": "W1",
-        "team1": "Walpole",
-        "team2": "River Heights",
-        "winner": null
+        "team1": "Jarvis",
+        "team2": "Caledonia Centennial",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-1",
+          "slot": 2
+        }
       },
       {
         "id": "W1-3",
         "round": "W1",
-        "team1": "Seneca",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Mapleview",
+        "team2": "River Heights",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 1
+        }
       },
       {
         "id": "W1-4",
         "round": "W1",
         "team1": "BYE",
-        "team2": "Thompson Creek",
-        "winner": null
+        "team2": "Seneca Central",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-2",
+          "slot": 2
+        }
       },
       {
         "id": "W1-5",
         "round": "W1",
-        "team1": "Robert Lang",
+        "team1": "Walpole North",
         "team2": "BYE",
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 1
+        }
       },
       {
         "id": "W1-6",
         "round": "W1",
-        "team1": "Rainham",
-        "team2": "BYE",
-        "winner": null
+        "team1": "J. L. Mitchener",
+        "team2": "Hagersville",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-3",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-3",
+          "slot": 2
+        }
       },
       {
         "id": "W1-7",
         "round": "W1",
-        "team1": "IL Thomas",
-        "team2": "BYE",
-        "winner": null
+        "team1": "Oneida",
+        "team2": "Thompson Creek",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 1
+        }
       },
       {
         "id": "W1-8",
         "round": "W1",
         "team1": "BYE",
-        "team2": "Oneida",
-        "winner": null
+        "team2": "Rainham",
+        "winner": null,
+        "nextWin": {
+          "matchId": "W2-4",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L1-4",
+          "slot": 2
+        }
       },
       {
         "id": "W2-1",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-1",
+          "slot": 1
+        }
       },
       {
         "id": "W2-2",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-2",
+          "slot": 1
+        }
       },
       {
         "id": "W2-3",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L2-3",
+          "slot": 1
+        }
       },
       {
         "id": "W2-4",
         "round": "W2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W3-2",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L2-4",
+          "slot": 1
+        }
       },
       {
         "id": "W3-1",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L4-1",
+          "slot": 1
+        }
       },
       {
         "id": "W3-2",
         "round": "W3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "W4-1",
+          "slot": 2
+        },
+        "nextLose": {
+          "matchId": "L4-2",
+          "slot": 1
+        }
       },
       {
         "id": "W4-1",
         "round": "W4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 1
+        },
+        "nextLose": {
+          "matchId": "L6-1",
+          "slot": 1
+        }
       },
       {
         "id": "L1-1",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-2",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-3",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-3",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L1-4",
         "round": "L1",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L2-4",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-1",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-2",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L2-3",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L2-4",
         "round": "L2",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L3-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-1",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L3-2",
         "round": "L3",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L4-2",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L4-1",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 1
+        },
+        "nextLose": null
       },
       {
         "id": "L4-2",
         "round": "L4",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L5-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L5-1",
         "round": "L5",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "L6-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "L6-1",
         "round": "L6",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": {
+          "matchId": "GF-1",
+          "slot": 2
+        },
+        "nextLose": null
       },
       {
         "id": "GF-1",
         "round": "GF",
         "team1": null,
         "team2": null,
-        "winner": null
+        "winner": null,
+        "nextWin": null,
+        "nextLose": null
       }
     ]
   }

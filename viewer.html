@@ -350,13 +350,19 @@ function getFeedLabel(matches, matchId, slotNumber){
     }
   }
 
-  return "TBD";
+  return "Pending";
 }
 
 function getDisplayName(matches, match, slotNumber){
   const actualName = slotNumber === 1 ? match.team1 : match.team2;
 
-  if(actualName){
+  const isEmpty =
+    actualName === null ||
+    actualName === undefined ||
+    actualName === "" ||
+    String(actualName).trim().toUpperCase() === "TBD";
+
+  if(!isEmpty){
     return { text: actualName, placeholder: false };
   }
 
