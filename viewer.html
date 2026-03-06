@@ -247,9 +247,9 @@ function escapeHtml(s){
     .replaceAll(">","&gt;");
 }
 
-function el(tag, attrs={}, html=""){
+function el(tag, attrs = {}, html = ""){
   const n = document.createElement(tag);
-  Object.entries(attrs).forEach(([k,v]) => n.setAttribute(k, v));
+  Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
   if(html) n.innerHTML = html;
   return n;
 }
@@ -258,10 +258,10 @@ function renderTabs(){
   const tabs = document.getElementById("tabs");
   tabs.innerHTML = "";
 
-  DIV_KEYS.forEach(key=>{
-    const t = el("div",{class:"tab"+(key===activeDiv?" active":"")});
+  DIV_KEYS.forEach(key => {
+    const t = el("div", { class: "tab" + (key === activeDiv ? " active" : "") });
     t.textContent = key;
-    t.onclick = ()=>{
+    t.onclick = () => {
       activeDiv = key;
       renderTabs();
       render();
@@ -299,14 +299,14 @@ function classifyRounds(matches){
 
 function sortRoundGroups(obj){
   return Object.keys(obj)
-    .sort((a,b)=>{
+    .sort((a, b) => {
       const parse = s => {
-        const n = parseInt(s.replace(/[^\d]/g,""),10);
+        const n = parseInt(s.replace(/[^\d]/g, ""), 10);
         return Number.isNaN(n) ? 999 : n;
       };
       return parse(a) - parse(b);
     })
-    .map(key => ({ round:key, matches:obj[key] }));
+    .map(key => ({ round: key, matches: obj[key] }));
 }
 
 function renderTeam(name, winner){
@@ -337,7 +337,7 @@ function renderMatch(match){
 function buildPredecessorMap(matches){
   const predMap = {};
 
-  matches.forEach(m=>{
+  matches.forEach(m => {
     if(m.nextWin?.matchId){
       if(!predMap[m.nextWin.matchId]) predMap[m.nextWin.matchId] = [];
       predMap[m.nextWin.matchId].push(m.id);
@@ -351,30 +351,53 @@ function buildPredecessorMap(matches){
   return predMap;
 }
 
-function computePositions(roundGroups, allMatches){
+function roundSortValue(round){
+  if(round === "GF") return 1000;
+
+  const type = round[0];
+  const num = parseInt(round.slice(1), 10) || 0;
+
+  if(type === "W") return num;
+  if(type === "L") return 100 + num;
+
+  return 999;
+}
+
+function computeGlobalPositions(allMatches){
   const positionsById = {};
   const predMap = buildPredecessorMap(allMatches);
 
-  if(roundGroups.length === 0) return positionsById;
+  const grouped = {};
+  allMatches.forEach(m => {
+    const r = m.round || "Round";
+    if(!grouped[r]) grouped[r] = [];
+    grouped[r].push(m);
+  });
 
-  roundGroups[0].matches.forEach((m, i)=>{
+  const orderedRounds = Object.keys(grouped).sort((a, b) => roundSortValue(a) - roundSortValue(b));
+
+  const winnerRound1 = grouped["W1"] || [];
+
+  winnerRound1.forEach((m, i) => {
     positionsById[m.id] = i * (MATCH_HEIGHT + ROUND1_GAP);
   });
 
-  for(let r=1; r<roundGroups.length; r++){
-    roundGroups[r].matches.forEach((m, i)=>{
-      const preds = predMap[m.id] || [];
+  for(const round of orderedRounds){
+    for(const [i, m] of grouped[round].entries()){
+      if(positionsById[m.id] !== undefined) continue;
 
-      if(preds.length >= 2 &&
-         positionsById[preds[0]] !== undefined &&
-         positionsById[preds[1]] !== undefined){
-        positionsById[m.id] = (positionsById[preds[0]] + positionsById[preds[1]]) / 2;
-      } else if(preds.length === 1 && positionsById[preds[0]] !== undefined){
-        positionsById[m.id] = positionsById[preds[0]];
+      const preds = predMap[m.id] || [];
+      const knownPreds = preds.filter(id => positionsById[id] !== undefined);
+
+      if(knownPreds.length >= 2){
+        positionsById[m.id] =
+          knownPreds.reduce((sum, id) => sum + positionsById[id], 0) / knownPreds.length;
+      } else if(knownPreds.length === 1){
+        positionsById[m.id] = positionsById[knownPreds[0]];
       } else {
         positionsById[m.id] = i * (MATCH_HEIGHT + ROUND1_GAP);
       }
-    });
+    }
   }
 
   return positionsById;
@@ -388,20 +411,26 @@ function renderBracketSection(containerId, roundGroups, emptyMessage, allMatches
     return;
   }
 
-  const positionsById = computePositions(roundGroups, allMatches);
-  const grid = el("div", {class:"bracket-grid"});
+  const positionsById = computeGlobalPositions(allMatches);
+  const grid = el("div", { class: "bracket-grid" });
 
-  const ys = Object.values(positionsById);
-  const baseHeight = ys.length ? Math.max(...ys) + MATCH_HEIGHT : MATCH_HEIGHT;
+  const usedYs = [];
+  roundGroups.forEach(group => {
+    group.matches.forEach(m => {
+      if(positionsById[m.id] !== undefined) usedYs.push(positionsById[m.id]);
+    });
+  });
 
-  roundGroups.forEach(group=>{
-    const col = el("div", {class:"round-col"});
+  const baseHeight = usedYs.length ? Math.max(...usedYs) + MATCH_HEIGHT : MATCH_HEIGHT;
+
+  roundGroups.forEach(group => {
+    const col = el("div", { class: "round-col" });
     col.appendChild(el("h3", {}, escapeHtml(group.round === "GF" ? "Grand Final" : group.round)));
 
-    const matchesWrap = el("div", {class:"matches-wrap"});
+    const matchesWrap = el("div", { class: "matches-wrap" });
     matchesWrap.style.height = `${baseHeight}px`;
 
-    group.matches.forEach(match=>{
+    group.matches.forEach(match => {
       const wrapper = document.createElement("div");
       wrapper.className = "match-pos";
       wrapper.style.top = `${positionsById[match.id] || 0}px`;
@@ -440,30 +469,26 @@ function render(){
   const matches = div.matches || [];
   const grouped = classifyRounds(matches);
 
-  const winnerMatches = matches.filter(m => (m.round || "").startsWith("W"));
-  const loserMatches  = matches.filter(m => (m.round || "").startsWith("L"));
-  const finalMatches  = matches.filter(m => !(m.round || "").startsWith("W") && !(m.round || "").startsWith("L"));
+  renderBracketSection(
+    "winnersContent",
+    grouped.winners,
+    "No winners bracket matches yet.",
+    matches
+  );
 
   renderBracketSection(
-  "winnersContent",
-  grouped.winners,
-  "No winners bracket matches yet.",
-  matches
-);
+    "losersContent",
+    grouped.losers,
+    "No losers bracket matches yet.",
+    matches
+  );
 
-renderBracketSection(
-  "losersContent",
-  grouped.losers,
-  "No losers bracket matches yet.",
-  matches
-);
-
-renderBracketSection(
-  "finalContent",
-  grouped.finals,
-  "No final yet.",
-  matches
-);
+  renderBracketSection(
+    "finalContent",
+    grouped.finals,
+    "No final yet.",
+    matches
+  );
 
   document.getElementById("lastUpdated").textContent =
     results._meta?.updatedAt
@@ -473,7 +498,7 @@ renderBracketSection(
 
 async function loadResults(){
   try{
-    const r = await fetch("results_public.json?cb=" + Date.now(), {cache:"no-store"});
+    const r = await fetch("results_public.json?cb=" + Date.now(), { cache: "no-store" });
     if(!r.ok) throw new Error("HTTP " + r.status);
 
     results = await r.json();
@@ -485,6 +510,8 @@ async function loadResults(){
         <b>Could not load results_public.json</b><br>
         Make sure viewer.html and results_public.json are in the same folder.
       </div>`;
+    document.getElementById("losersContent").innerHTML = "";
+    document.getElementById("finalContent").innerHTML = "";
   }
 }
 
