@@ -268,7 +268,18 @@ let results = null;
 let activeDiv = DIV_KEYS[0];
 
 const MATCH_HEIGHT = 96;
-const BASE_STEP = 95;
+
+/*
+  This is the true vertical step between W1 match tops.
+  All later winners rounds are calculated from this exact value.
+*/
+const WINNERS_ROUND1_STEP = 128;
+
+/*
+  Losers bracket is still tuned visually.
+  We can refine this further after winners + connectors are locked in.
+*/
+const LOSERS_STEP_MULTIPLIERS = [1.15, 1.6, 2.1, 2.75, 4.15, 5.3];
 
 function escapeHtml(s){
   return String(s)
@@ -410,27 +421,32 @@ function renderMatch(matches, match){
   `;
 }
 
-function getWinnersTop(roundIndex, matchIndex){
-  if(roundIndex === 0){
-    const round1Gap = BASE_STEP * 1.35;
-    return matchIndex * round1Gap;
-  }
+/*
+  Winners bracket math:
+  Round 1: top = i * S
+  Round 2: top = S/2 + i * 2S
+  Round 3: top = 3S/2 + i * 4S
+  Round 4: top = 7S/2 + i * 8S
 
-  const step = BASE_STEP * Math.pow(2, roundIndex);
-  const offset = (step - BASE_STEP) / 2;
+  General:
+  step   = S * 2^r
+  offset = S * (2^r - 1) / 2
+*/
+function getWinnersTop(roundIndex, matchIndex){
+  const step = WINNERS_ROUND1_STEP * Math.pow(2, roundIndex);
+  const offset = WINNERS_ROUND1_STEP * (Math.pow(2, roundIndex) - 1) / 2;
   return offset + (matchIndex * step);
 }
 
 function getLosersTop(roundIndex, matchIndex){
-  const stepMultipliers = [1.2, 1.6, 2.1, 2.7, 4.1, 5.2];
-  const multiplier = stepMultipliers[roundIndex] || 1.2;
-  const step = BASE_STEP * multiplier;
-  const offset = (step - BASE_STEP) / 2;
+  const multiplier = LOSERS_STEP_MULTIPLIERS[roundIndex] || 1.15;
+  const step = WINNERS_ROUND1_STEP * multiplier;
+  const offset = (step - WINNERS_ROUND1_STEP) / 2;
   return offset + (matchIndex * step);
 }
 
 function getFinalTop(matchIndex){
-  return matchIndex * BASE_STEP;
+  return matchIndex * WINNERS_ROUND1_STEP;
 }
 
 function getSectionHeight(roundGroups, type){
