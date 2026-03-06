@@ -95,6 +95,31 @@ h1{
   font-size:1rem;
 }
 
+.placing-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(140px,1fr));
+  gap:10px;
+}
+
+.place-box{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px;
+  background:#fff;
+}
+
+.place-label{
+  font-size:.78rem;
+  font-weight:700;
+  color:#475569;
+  margin-bottom:6px;
+}
+
+.place-team{
+  font-size:.95rem;
+  font-weight:600;
+}
+
 .bracket-grid{
   display:flex;
   gap:20px;
@@ -239,6 +264,10 @@ h1{
     min-width:185px;
     flex-basis:185px;
   }
+
+  .placing-grid{
+    grid-template-columns:1fr 1fr;
+  }
 }
 </style>
 </head>
@@ -258,6 +287,11 @@ h1{
         <span><span class="dot pending"></span>Not decided</span>
       </span>
     </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Top 4 Placings</h2>
+    <div id="placingContent"></div>
   </div>
 
   <div class="card">
@@ -606,6 +640,95 @@ function renderConnectorSvg(totalWidth, totalHeight, paths){
   return svg;
 }
 
+function getMatchById(matches, id){
+  return matches.find(m => m.id === id) || null;
+}
+
+function getLoser(match){
+  if(!match || !match.winner || !match.team1 || !match.team2) return null;
+  return match.winner === match.team1 ? match.team2 : match.team1;
+}
+
+function getWinner(match){
+  return match && match.winner ? match.winner : null;
+}
+
+function mIdNumber(id){
+  const parts = String(id).split("-");
+  return parts.length > 1 ? parts[1] : "0";
+}
+
+function getSortedLoserMatches(matches){
+  return matches
+    .filter(m => (m.round || "").startsWith("L"))
+    .sort((a,b)=>{
+      const aNum = parseInt((a.round || "").replace(/[^\d]/g,""), 10) || 0;
+      const bNum = parseInt((b.round || "").replace(/[^\d]/g,""), 10) || 0;
+      if(aNum !== bNum) return aNum - bNum;
+
+      const aId = parseInt(mIdNumber(a.id), 10) || 0;
+      const bId = parseInt(mIdNumber(b.id), 10) || 0;
+      return aId - bId;
+    });
+}
+
+function computeTop4(matches){
+  const gf2 = getMatchById(matches, "GF-2");
+  const gf1 = getMatchById(matches, "GF-1");
+
+  let decidingFinal = null;
+  if(gf2 && gf2.team1 && gf2.team2 && gf2.winner){
+    decidingFinal = gf2;
+  } else if(gf1 && gf1.winner){
+    decidingFinal = gf1;
+  }
+
+  const first = getWinner(decidingFinal);
+  const second = getLoser(decidingFinal);
+
+  const loserMatches = getSortedLoserMatches(matches)
+    .filter(m => m.winner && m.team1 && m.team2);
+
+  const lastLoserMatch = loserMatches.length ? loserMatches[loserMatches.length - 1] : null;
+  const prevLoserMatch = loserMatches.length > 1 ? loserMatches[loserMatches.length - 2] : null;
+
+  const third = getLoser(lastLoserMatch);
+  const fourth = getLoser(prevLoserMatch);
+
+  return {
+    first: first || "—",
+    second: second || "—",
+    third: third || "—",
+    fourth: fourth || "—"
+  };
+}
+
+function renderPlacings(matches){
+  const holder = document.getElementById("placingContent");
+  const top4 = computeTop4(matches);
+
+  holder.innerHTML = `
+    <div class="placing-grid">
+      <div class="place-box">
+        <div class="place-label">1st Place</div>
+        <div class="place-team">${escapeHtml(top4.first)}</div>
+      </div>
+      <div class="place-box">
+        <div class="place-label">2nd Place</div>
+        <div class="place-team">${escapeHtml(top4.second)}</div>
+      </div>
+      <div class="place-box">
+        <div class="place-label">3rd Place</div>
+        <div class="place-team">${escapeHtml(top4.third)}</div>
+      </div>
+      <div class="place-box">
+        <div class="place-label">4th Place</div>
+        <div class="place-team">${escapeHtml(top4.fourth)}</div>
+      </div>
+    </div>
+  `;
+}
+
 function renderCombinedWinnersAndFinal(containerId, winnerGroups, finalGroups, emptyMessage, matches){
   const container = document.getElementById(containerId);
 
@@ -736,6 +859,7 @@ function render(){
   if(!results){
     winnersContent.innerHTML = `<div class="error">No results loaded yet.</div>`;
     losersContent.innerHTML = `<div class="small">No results loaded yet.</div>`;
+    document.getElementById("placingContent").innerHTML = `<div class="small">No placings yet.</div>`;
     return;
   }
 
@@ -743,11 +867,14 @@ function render(){
   if(!div){
     winnersContent.innerHTML = `<div class="error">Division not found</div>`;
     losersContent.innerHTML = "";
+    document.getElementById("placingContent").innerHTML = "";
     return;
   }
 
   const matches = div.matches || [];
   currentShellSize = div.shellSize || 0;
+
+  renderPlacings(matches);
 
   const grouped = classifyRounds(matches);
 
@@ -787,6 +914,7 @@ async function loadResults(){
         Make sure viewer.html and results_public.json are in the same folder.
       </div>`;
     document.getElementById("losersContent").innerHTML = "";
+    document.getElementById("placingContent").innerHTML = `<div class="small">No placings yet.</div>`;
   }
 }
 
