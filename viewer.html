@@ -445,25 +445,25 @@ function render(){
   const finalMatches  = matches.filter(m => !(m.round || "").startsWith("W") && !(m.round || "").startsWith("L"));
 
   renderBracketSection(
-    "winnersContent",
-    grouped.winners,
-    "No winners bracket matches yet.",
-    winnerMatches
-  );
+  "winnersContent",
+  grouped.winners,
+  "No winners bracket matches yet.",
+  matches
+);
 
-  renderBracketSection(
-    "losersContent",
-    grouped.losers,
-    "No losers bracket matches yet.",
-    loserMatches
-  );
+renderBracketSection(
+  "losersContent",
+  grouped.losers,
+  "No losers bracket matches yet.",
+  matches
+);
 
-  renderBracketSection(
-    "finalContent",
-    grouped.finals,
-    "No final yet.",
-    finalMatches
-  );
+renderBracketSection(
+  "finalContent",
+  grouped.finals,
+  "No final yet.",
+  matches
+);
 
   document.getElementById("lastUpdated").textContent =
     results._meta?.updatedAt
