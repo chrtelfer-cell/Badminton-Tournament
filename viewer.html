@@ -27,7 +27,7 @@ body{
 }
 
 .wrap{
-  max-width:1800px;
+  max-width:1850px;
   margin:0 auto;
 }
 
@@ -96,16 +96,16 @@ h1{
 
 .bracket-grid{
   display:flex;
-  gap:18px;
+  gap:20px;
   align-items:flex-start;
   min-width:max-content;
-  padding-bottom:4px;
+  padding-bottom:6px;
 }
 
 .round-col{
-  width:200px;
-  min-width:200px;
-  flex:0 0 200px;
+  width:210px;
+  min-width:210px;
+  flex:0 0 210px;
 }
 
 .round-col h3{
@@ -115,17 +115,14 @@ h1{
   text-align:center;
 }
 
-.round-stack{
-  display:flex;
-  flex-direction:column;
+.matches-wrap{
+  position:relative;
 }
 
-.match-shell{
-  margin-top:10px;
-}
-
-.match-shell:first-child{
-  margin-top:0 !important;
+.match-pos{
+  position:absolute;
+  left:0;
+  right:0;
 }
 
 .match{
@@ -203,9 +200,9 @@ h1{
 
 @media (max-width: 900px){
   .round-col{
-    width:180px;
-    min-width:180px;
-    flex-basis:180px;
+    width:185px;
+    min-width:185px;
+    flex-basis:185px;
   }
 }
 </style>
@@ -255,6 +252,9 @@ const DIV_KEYS = [
 
 let results = null;
 let activeDiv = DIV_KEYS[0];
+
+const MATCH_HEIGHT = 78;
+const BASE_STEP = 88;
 
 function escapeHtml(s){
   return String(s)
@@ -351,29 +351,54 @@ function renderMatch(match){
   `;
 }
 
-function getGapBefore(round, index){
-  if(index === 0) return 0;
-
-  const gapMap = {
-    W1: 10,
-    W2: 34,
-    W3: 78,
-    W4: 150,
-
-    L1: 10,
-    L2: 18,
-    L3: 30,
-    L4: 46,
-    L5: 74,
-    L6: 110,
-
-    GF: 10
-  };
-
-  return gapMap[round] || 14;
+function getWinnersTop(roundIndex, matchIndex){
+  const step = BASE_STEP * Math.pow(2, roundIndex);
+  const offset = (step - BASE_STEP) / 2;
+  return offset + (matchIndex * step);
 }
 
-function renderBracketSection(containerId, roundGroups, emptyMessage){
+function getLosersTop(roundIndex, matchIndex){
+  const stepMultipliers = [1, 1.5, 2, 2.5, 4, 5];
+  const multiplier = stepMultipliers[roundIndex] || 1;
+  const step = BASE_STEP * multiplier;
+  const offset = (step - BASE_STEP) / 2;
+  return offset + (matchIndex * step);
+}
+
+function getFinalTop(matchIndex){
+  return matchIndex * BASE_STEP;
+}
+
+function getSectionHeight(roundGroups, type){
+  if(roundGroups.length === 0) return MATCH_HEIGHT;
+
+  let tallest = MATCH_HEIGHT;
+
+  roundGroups.forEach((group, roundIndex)=>{
+    let maxTop = 0;
+
+    group.matches.forEach((match, matchIndex)=>{
+      let top = 0;
+
+      if(type === "winners"){
+        top = getWinnersTop(roundIndex, matchIndex);
+      }else if(type === "losers"){
+        top = getLosersTop(roundIndex, matchIndex);
+      }else{
+        top = getFinalTop(matchIndex);
+      }
+
+      if(top > maxTop) maxTop = top;
+    });
+
+    const total = maxTop + MATCH_HEIGHT;
+    if(total > tallest) tallest = total;
+  });
+
+  return tallest;
+}
+
+function renderBracketSection(containerId, roundGroups, emptyMessage, type){
   const container = document.getElementById(containerId);
 
   if(roundGroups.length === 0){
@@ -382,21 +407,34 @@ function renderBracketSection(containerId, roundGroups, emptyMessage){
   }
 
   const grid = el("div", { class:"bracket-grid" });
+  const sectionHeight = getSectionHeight(roundGroups, type);
 
-  roundGroups.forEach(group=>{
+  roundGroups.forEach((group, roundIndex)=>{
     const col = el("div", { class:"round-col" });
     col.appendChild(el("h3", {}, escapeHtml(group.round === "GF" ? "Grand Final" : group.round)));
 
-    const stack = el("div", { class:"round-stack" });
+    const wrap = el("div", { class:"matches-wrap" });
+    wrap.style.height = `${sectionHeight}px`;
 
-    group.matches.forEach((match, index)=>{
-      const shell = el("div", { class:"match-shell" });
-      shell.style.marginTop = `${getGapBefore(group.round, index)}px`;
-      shell.innerHTML = renderMatch(match);
-      stack.appendChild(shell);
+    group.matches.forEach((match, matchIndex)=>{
+      let top = 0;
+
+      if(type === "winners"){
+        top = getWinnersTop(roundIndex, matchIndex);
+      }else if(type === "losers"){
+        top = getLosersTop(roundIndex, matchIndex);
+      }else{
+        top = getFinalTop(matchIndex);
+      }
+
+      const holder = document.createElement("div");
+      holder.className = "match-pos";
+      holder.style.top = `${top}px`;
+      holder.innerHTML = renderMatch(match);
+      wrap.appendChild(holder);
     });
 
-    col.appendChild(stack);
+    col.appendChild(wrap);
     grid.appendChild(col);
   });
 
@@ -430,19 +468,22 @@ function render(){
   renderBracketSection(
     "winnersContent",
     grouped.winners,
-    "No winners bracket matches yet."
+    "No winners bracket matches yet.",
+    "winners"
   );
 
   renderBracketSection(
     "losersContent",
     grouped.losers,
-    "No losers bracket matches yet."
+    "No losers bracket matches yet.",
+    "losers"
   );
 
   renderBracketSection(
     "finalContent",
     grouped.finals,
-    "No final yet."
+    "No final yet.",
+    "finals"
   );
 
   document.getElementById("lastUpdated").textContent =
