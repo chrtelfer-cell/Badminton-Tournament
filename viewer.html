@@ -27,7 +27,7 @@ body{
 }
 
 .wrap{
-  max-width:1850px;
+  max-width:1900px;
   margin:0 auto;
 }
 
@@ -87,6 +87,22 @@ h1{
   background:#eef2ff;
   border:1px solid #c7d2fe;
   color:#1e3a8a;
+}
+
+.page-grid{
+  display:grid;
+  grid-template-columns: 1fr 320px 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+.section-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  overflow-x:auto;
+  min-height:120px;
 }
 
 .section-title{
@@ -212,11 +228,21 @@ h1{
   font-style:italic;
 }
 
-@media (max-width: 900px){
-  .round-col{
-    width:185px;
-    min-width:185px;
-    flex-basis:185px;
+.final-center{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100%;
+}
+
+.final-shell{
+  width:100%;
+  max-width:280px;
+}
+
+@media (max-width: 1300px){
+  .page-grid{
+    grid-template-columns: 1fr;
   }
 }
 </style>
@@ -239,19 +265,23 @@ h1{
     </div>
   </div>
 
-  <div class="card">
-    <h2 class="section-title">Winners Bracket</h2>
-    <div id="winnersContent"></div>
-  </div>
+  <div class="page-grid">
+    <div class="section-card">
+      <h2 class="section-title">Winners Bracket</h2>
+      <div id="winnersContent"></div>
+    </div>
 
-  <div class="card">
-    <h2 class="section-title">Losers Bracket</h2>
-    <div id="losersContent"></div>
-  </div>
+    <div class="section-card final-center">
+      <div class="final-shell">
+        <h2 class="section-title" style="text-align:center;">Grand Final</h2>
+        <div id="finalContent"></div>
+      </div>
+    </div>
 
-  <div class="card">
-    <h2 class="section-title">Grand Final</h2>
-    <div id="finalContent"></div>
+    <div class="section-card">
+      <h2 class="section-title">Losers Bracket</h2>
+      <div id="losersContent"></div>
+    </div>
   </div>
 </div>
 
@@ -448,10 +478,8 @@ function getLosersTop(match, shellSize){
     const map8 = {
       "L1-1": 1.5 * S,
       "L1-2": 5.5 * S,
-
       "L2-1": 2.5 * S,
       "L2-2": 6.5 * S,
-
       "L3-1": 4.5 * S,
       "L4-1": 4.5 * S
     };
@@ -546,6 +574,25 @@ function renderBracketSection(containerId, roundGroups, emptyMessage, type, matc
   container.appendChild(grid);
 }
 
+function renderFinalCenter(containerId, roundGroups, emptyMessage, matches){
+  const container = document.getElementById(containerId);
+
+  if(roundGroups.length === 0){
+    container.innerHTML = `<div class="small" style="text-align:center;">${emptyMessage}</div>`;
+    return;
+  }
+
+  const group = roundGroups[0];
+  const match = group.matches[0];
+
+  if(!match){
+    container.innerHTML = `<div class="small" style="text-align:center;">${emptyMessage}</div>`;
+    return;
+  }
+
+  container.innerHTML = renderMatch(matches, match);
+}
+
 function render(){
   const winnersContent = document.getElementById("winnersContent");
   const losersContent = document.getElementById("losersContent");
@@ -579,19 +626,18 @@ function render(){
     matches
   );
 
+  renderFinalCenter(
+    "finalContent",
+    grouped.finals,
+    "No final yet.",
+    matches
+  );
+
   renderBracketSection(
     "losersContent",
     grouped.losers,
     "No losers bracket matches yet.",
     "losers",
-    matches
-  );
-
-  renderBracketSection(
-    "finalContent",
-    grouped.finals,
-    "No final yet.",
-    "finals",
     matches
   );
 
