@@ -198,6 +198,11 @@ h1{
   color:#991b1b;
 }
 
+.placeholder{
+  color:#64748b;
+  font-style:italic;
+}
+
 @media (max-width: 900px){
   .round-col{
     width:185px;
@@ -326,24 +331,57 @@ function sortRoundGroups(obj){
     .map(key => ({ round:key, matches:obj[key] }));
 }
 
-function renderTeam(name, winner){
+function buildIncomingSlotLabels(matches){
+  const slotLabels = {};
+
+  for(const m of matches){
+    if(m.nextWin && m.nextWin.matchId){
+      const key = `${m.nextWin.matchId}::${m.nextWin.slot}`;
+      slotLabels[key] = `Winner of ${m.id}`;
+    }
+
+    if(m.nextLose && m.nextLose.matchId){
+      const key = `${m.nextLose.matchId}::${m.nextLose.slot}`;
+      slotLabels[key] = `Loser of ${m.id}`;
+    }
+  }
+
+  return slotLabels;
+}
+
+function getDisplayName(match, slotNumber, slotLabels){
+  const actualName = slotNumber === 1 ? match.team1 : match.team2;
+  if(actualName) return { text: actualName, placeholder: false };
+
+  const key = `${match.id}::${slotNumber}`;
+  if(slotLabels[key]){
+    return { text: slotLabels[key], placeholder: true };
+  }
+
+  return { text: "TBD", placeholder: true };
+}
+
+function renderTeam(display, winner){
   return `
     <div class="team ${winner ? "win" : ""}">
-      <span>${escapeHtml(name || "TBD")}</span>
+      <span class="${display.placeholder ? "placeholder" : ""}">${escapeHtml(display.text)}</span>
       <span class="winner-mark">${winner ? "W" : ""}</span>
     </div>
   `;
 }
 
-function renderMatch(match){
+function renderMatch(match, slotLabels){
+  const team1Display = getDisplayName(match, 1, slotLabels);
+  const team2Display = getDisplayName(match, 2, slotLabels);
+
   const winner = match.winner || null;
   const aWin = winner && winner === match.team1;
   const bWin = winner && winner === match.team2;
 
   return `
     <div class="match">
-      ${renderTeam(match.team1, aWin)}
-      ${renderTeam(match.team2, bWin)}
+      ${renderTeam(team1Display, aWin)}
+      ${renderTeam(team2Display, bWin)}
       <div class="match-footer">
         Winner: ${winner ? escapeHtml(winner) : "—"}
       </div>
@@ -403,7 +441,7 @@ function getSectionHeight(roundGroups, type){
   return tallest;
 }
 
-function renderBracketSection(containerId, roundGroups, emptyMessage, type){
+function renderBracketSection(containerId, roundGroups, emptyMessage, type, slotLabels){
   const container = document.getElementById(containerId);
 
   if(roundGroups.length === 0){
@@ -435,7 +473,7 @@ function renderBracketSection(containerId, roundGroups, emptyMessage, type){
       const holder = document.createElement("div");
       holder.className = "match-pos";
       holder.style.top = `${top}px`;
-      holder.innerHTML = renderMatch(match);
+      holder.innerHTML = renderMatch(match, slotLabels);
       wrap.appendChild(holder);
     });
 
@@ -469,26 +507,30 @@ function render(){
 
   const matches = div.matches || [];
   const grouped = classifyRounds(matches);
+  const slotLabels = buildIncomingSlotLabels(matches);
 
   renderBracketSection(
     "winnersContent",
     grouped.winners,
     "No winners bracket matches yet.",
-    "winners"
+    "winners",
+    slotLabels
   );
 
   renderBracketSection(
     "losersContent",
     grouped.losers,
     "No losers bracket matches yet.",
-    "losers"
+    "losers",
+    slotLabels
   );
 
   renderBracketSection(
     "finalContent",
     grouped.finals,
     "No final yet.",
-    "finals"
+    "finals",
+    slotLabels
   );
 
   document.getElementById("lastUpdated").textContent =
