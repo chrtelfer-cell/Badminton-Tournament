@@ -6,14 +6,12 @@
 <title>Badminton Tournament – Live Brackets</title>
 
 <style>
-
 :root{
   --bg:#f6f7fb;
   --card:#fff;
   --ink:#111;
   --muted:#555;
   --line:#d9dee7;
-  --accent:#1f60d6;
   --win:#eafaf0;
   --win-border:#9fdfb3;
 }
@@ -26,7 +24,7 @@ body{
 }
 
 .wrap{
-  max-width:1600px;
+  max-width:1800px;
   margin:0 auto;
 }
 
@@ -100,8 +98,8 @@ h1{
 }
 
 .round-col{
-  min-width:240px;
-  flex:0 0 240px;
+  min-width:250px;
+  flex:0 0 250px;
 }
 
 .round-col h3{
@@ -113,6 +111,12 @@ h1{
 
 .matches-wrap{
   position:relative;
+}
+
+.match-pos{
+  position:absolute;
+  left:0;
+  right:0;
 }
 
 .match{
@@ -129,6 +133,8 @@ h1{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:8px;
+  min-height:22px;
 }
 
 .team:last-child{
@@ -183,297 +189,296 @@ h1{
   border-radius:10px;
   color:#991b1b;
 }
-
 </style>
 </head>
 
 <body>
-
 <div class="wrap">
+  <h1>🏸 Badminton Tournament – Live Brackets</h1>
+  <p class="sub">Auto-refreshes every 30 seconds. Showing <b>school names only</b>.</p>
 
-<h1>🏸 Badminton Tournament – Live Brackets</h1>
-<p class="sub">Auto-refreshes every 30 seconds. Showing <b>school names only</b>.</p>
+  <div class="tabs" id="tabs"></div>
 
-<div class="tabs" id="tabs"></div>
+  <div class="card">
+    <div class="meta">
+      <span class="pill" id="lastUpdated">Loading…</span>
+      <span class="legend small">
+        <span><span class="dot win"></span>Winner chosen</span>
+        <span><span class="dot pending"></span>Not decided</span>
+      </span>
+    </div>
+  </div>
 
-<div class="card">
-<div class="meta">
-<span class="pill" id="lastUpdated">Loading…</span>
-<span class="legend small">
-<span><span class="dot win"></span>Winner chosen</span>
-<span><span class="dot pending"></span>Not decided</span>
-</span>
-</div>
-</div>
+  <div class="card">
+    <h2 class="section-title">Winners Bracket</h2>
+    <div id="winnersContent"></div>
+  </div>
 
-<div class="card">
-<h2 class="section-title">Winners Bracket</h2>
-<div id="winnersContent"></div>
-</div>
+  <div class="card">
+    <h2 class="section-title">Losers Bracket</h2>
+    <div id="losersContent"></div>
+  </div>
 
-<div class="card">
-<h2 class="section-title">Losers Bracket</h2>
-<div id="losersContent"></div>
-</div>
-
-<div class="card">
-<h2 class="section-title">Grand Final</h2>
-<div id="finalContent"></div>
-</div>
-
+  <div class="card">
+    <h2 class="section-title">Grand Final</h2>
+    <div id="finalContent"></div>
+  </div>
 </div>
 
 <script>
-
 const DIV_KEYS = [
-"Boys Singles",
-"Girls Singles",
-"Boys Doubles",
-"Girls Doubles",
-"Mixed Doubles"
+  "Boys Singles",
+  "Girls Singles",
+  "Boys Doubles",
+  "Girls Doubles",
+  "Mixed Doubles"
 ];
 
 let results = null;
 let activeDiv = DIV_KEYS[0];
 
+const MATCH_HEIGHT = 110;
+const ROUND1_GAP = 16;
+
 function escapeHtml(s){
-return String(s)
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;");
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
 }
 
 function el(tag, attrs={}, html=""){
-const n = document.createElement(tag);
-Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));
-if(html) n.innerHTML = html;
-return n;
+  const n = document.createElement(tag);
+  Object.entries(attrs).forEach(([k,v]) => n.setAttribute(k, v));
+  if(html) n.innerHTML = html;
+  return n;
 }
 
 function renderTabs(){
-const tabs = document.getElementById("tabs");
-tabs.innerHTML = "";
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
 
-DIV_KEYS.forEach(key=>{
-const t = el("div",{class:"tab"+(key===activeDiv?" active":"")});
-t.textContent = key;
-t.onclick=()=>{
-activeDiv=key;
-renderTabs();
-render();
-};
-tabs.appendChild(t);
-});
+  DIV_KEYS.forEach(key=>{
+    const t = el("div",{class:"tab"+(key===activeDiv?" active":"")});
+    t.textContent = key;
+    t.onclick = ()=>{
+      activeDiv = key;
+      renderTabs();
+      render();
+    };
+    tabs.appendChild(t);
+  });
 }
 
 function classifyRounds(matches){
+  const winners = {};
+  const losers = {};
+  const finals = {};
 
-const winners = {};
-const losers = {};
-const finals = {};
+  for(const m of matches){
+    const r = m.round || "Round";
 
-for(const m of matches){
+    if(r.startsWith("W")){
+      if(!winners[r]) winners[r] = [];
+      winners[r].push(m);
+    } else if(r.startsWith("L")){
+      if(!losers[r]) losers[r] = [];
+      losers[r].push(m);
+    } else {
+      if(!finals[r]) finals[r] = [];
+      finals[r].push(m);
+    }
+  }
 
-const r = m.round || "Round";
-
-if(r.startsWith("W")){
-if(!winners[r]) winners[r]=[];
-winners[r].push(m);
-}
-else if(r.startsWith("L")){
-if(!losers[r]) losers[r]=[];
-losers[r].push(m);
-}
-else{
-if(!finals[r]) finals[r]=[];
-finals[r].push(m);
-}
-
-}
-
-return{
-winners:sortRoundGroups(winners),
-losers:sortRoundGroups(losers),
-finals:sortRoundGroups(finals)
-};
-
+  return {
+    winners: sortRoundGroups(winners),
+    losers: sortRoundGroups(losers),
+    finals: sortRoundGroups(finals)
+  };
 }
 
 function sortRoundGroups(obj){
-return Object.keys(obj)
-.sort()
-.map(key=>({round:key,matches:obj[key]}));
+  return Object.keys(obj)
+    .sort((a,b)=>{
+      const parse = (s)=>{
+        const n = parseInt(s.replace(/[^\d]/g,""),10);
+        return Number.isNaN(n) ? 999 : n;
+      };
+      return parse(a) - parse(b);
+    })
+    .map(key => ({ round:key, matches:obj[key] }));
 }
 
 function renderTeam(name, winner){
-return `
-<div class="team ${winner?"win":""}">
-<span>${escapeHtml(name||"TBD")}</span>
-<span class="winner-mark">${winner?"W":""}</span>
-</div>
-`;
+  return `
+    <div class="team ${winner ? "win" : ""}">
+      <span>${escapeHtml(name || "TBD")}</span>
+      <span class="winner-mark">${winner ? "W" : ""}</span>
+    </div>
+  `;
 }
 
 function renderMatch(match){
+  const winner = match.winner || null;
+  const aWin = winner && winner === match.team1;
+  const bWin = winner && winner === match.team2;
 
-const winner = match.winner || null;
+  return `
+    <div class="match">
+      ${renderTeam(match.team1, aWin)}
+      ${renderTeam(match.team2, bWin)}
+      <div class="match-footer">
+        Winner: ${winner ? escapeHtml(winner) : "—"}
+      </div>
+    </div>
+  `;
+}
 
-const aWin = winner && winner===match.team1;
-const bWin = winner && winner===match.team2;
+/*
+  For true bracket centering:
+  - Round 1 matches are stacked normally.
+  - Every later round match is vertically centered between the two prior-round matches that feed into it.
+  This works cleanly for the winners bracket and also improves the losers bracket display a lot.
+*/
+function computeRoundPositions(roundGroups){
+  const positions = [];
 
-return `
-<div class="match">
-${renderTeam(match.team1,aWin)}
-${renderTeam(match.team2,bWin)}
-<div class="match-footer">
-Winner: ${winner?escapeHtml(winner):"—"}
-</div>
-</div>
-`;
+  if(roundGroups.length === 0) return positions;
 
+  // Round 1 positions
+  positions[0] = [];
+  for(let i=0;i<roundGroups[0].matches.length;i++){
+    positions[0].push(i * (MATCH_HEIGHT + ROUND1_GAP));
+  }
+
+  // Later rounds: midpoint of previous-pair matches
+  for(let r=1;r<roundGroups.length;r++){
+    positions[r] = [];
+    const prev = positions[r-1];
+    const count = roundGroups[r].matches.length;
+
+    for(let i=0;i<count;i++){
+      const a = prev[i*2];
+      const b = prev[i*2 + 1];
+
+      if(a !== undefined && b !== undefined){
+        positions[r].push(((a + b) / 2));
+      } else if(a !== undefined){
+        positions[r].push(a);
+      } else {
+        positions[r].push(i * (MATCH_HEIGHT + ROUND1_GAP));
+      }
+    }
+  }
+
+  return positions;
 }
 
 function renderBracketSection(containerId, roundGroups, emptyMessage){
+  const container = document.getElementById(containerId);
 
-const container = document.getElementById(containerId);
+  if(roundGroups.length === 0){
+    container.innerHTML = `<div class="small">${emptyMessage}</div>`;
+    return;
+  }
 
-if(roundGroups.length===0){
-container.innerHTML=`<div class="small">${emptyMessage}</div>`;
-return;
-}
+  const positions = computeRoundPositions(roundGroups);
+  const grid = el("div", {class:"bracket-grid"});
 
-const grid = el("div",{class:"bracket-grid"});
+  // total height based on round 1
+  const baseHeight = positions[0].length
+    ? positions[0][positions[0].length - 1] + MATCH_HEIGHT
+    : MATCH_HEIGHT;
 
-roundGroups.forEach((group,roundIndex)=>{
+  roundGroups.forEach((group, roundIndex)=>{
+    const col = el("div", {class:"round-col"});
+    col.appendChild(el("h3", {}, escapeHtml(group.round === "GF" ? "Grand Final" : group.round)));
 
-const col = el("div",{class:"round-col"});
+    const matchesWrap = el("div", {class:"matches-wrap"});
+    matchesWrap.style.height = `${baseHeight}px`;
 
-col.appendChild(
-el("h3",{},escapeHtml(group.round==="GF"?"Grand Final":group.round))
-);
+    group.matches.forEach((match, i)=>{
+      const wrapper = document.createElement("div");
+      wrapper.className = "match-pos";
+      wrapper.style.top = `${positions[roundIndex][i]}px`;
+      wrapper.innerHTML = renderMatch(match);
+      matchesWrap.appendChild(wrapper);
+    });
 
-const matchesWrap = el("div",{class:"matches-wrap"});
+    col.appendChild(matchesWrap);
+    grid.appendChild(col);
+  });
 
-const baseMatchHeight = 96;
-const baseGap = 16;
-
-const topPadding =
-roundIndex===0
-?0
-:((baseMatchHeight+baseGap)*Math.pow(2,roundIndex-1))/2;
-
-const gapBetweenMatches =
-roundIndex===0
-?baseGap
-:(baseMatchHeight+baseGap)*Math.pow(2,roundIndex)-baseMatchHeight;
-
-matchesWrap.style.paddingTop = `${topPadding}px`;
-
-group.matches.forEach((match,i)=>{
-
-const wrapper = document.createElement("div");
-
-wrapper.style.marginBottom =
-i===group.matches.length-1
-?"0px"
-:`${gapBetweenMatches}px`;
-
-wrapper.innerHTML = renderMatch(match);
-
-matchesWrap.appendChild(wrapper.firstElementChild);
-
-});
-
-col.appendChild(matchesWrap);
-
-grid.appendChild(col);
-
-});
-
-container.innerHTML="";
-container.appendChild(grid);
-
+  container.innerHTML = "";
+  container.appendChild(grid);
 }
 
 function render(){
+  const winnersContent = document.getElementById("winnersContent");
+  const losersContent = document.getElementById("losersContent");
+  const finalContent = document.getElementById("finalContent");
 
-const winnersContent = document.getElementById("winnersContent");
-const losersContent = document.getElementById("losersContent");
-const finalContent = document.getElementById("finalContent");
+  if(!results){
+    winnersContent.innerHTML = `<div class="error">No results loaded yet.</div>`;
+    losersContent.innerHTML = `<div class="small">No results loaded yet.</div>`;
+    finalContent.innerHTML = `<div class="small">No results loaded yet.</div>`;
+    return;
+  }
 
-if(!results){
-winnersContent.innerHTML=`<div class="error">No results loaded yet.</div>`;
-return;
-}
+  const div = results[activeDiv];
+  if(!div){
+    winnersContent.innerHTML = `<div class="error">Division not found</div>`;
+    losersContent.innerHTML = "";
+    finalContent.innerHTML = "";
+    return;
+  }
 
-const div = results[activeDiv];
+  const matches = div.matches || [];
+  const grouped = classifyRounds(matches);
 
-if(!div){
-winnersContent.innerHTML=`<div class="error">Division not found</div>`;
-return;
-}
+  renderBracketSection(
+    "winnersContent",
+    grouped.winners,
+    "No winners bracket matches yet."
+  );
 
-const matches = div.matches || [];
+  renderBracketSection(
+    "losersContent",
+    grouped.losers,
+    "No losers bracket matches yet."
+  );
 
-const grouped = classifyRounds(matches);
+  renderBracketSection(
+    "finalContent",
+    grouped.finals,
+    "No final yet."
+  );
 
-renderBracketSection(
-"winnersContent",
-grouped.winners,
-"No winners bracket matches yet."
-);
-
-renderBracketSection(
-"losersContent",
-grouped.losers,
-"No losers bracket matches yet."
-);
-
-renderBracketSection(
-"finalContent",
-grouped.finals,
-"No final yet."
-);
-
-document.getElementById("lastUpdated").textContent =
-results._meta?.updatedAt
-?`Updated: ${results._meta.updatedAt}`
-:"Updated: (timestamp missing)";
-
+  document.getElementById("lastUpdated").textContent =
+    results._meta?.updatedAt
+      ? `Updated: ${results._meta.updatedAt}`
+      : "Updated: (timestamp missing)";
 }
 
 async function loadResults(){
+  try{
+    const r = await fetch("results_public.json?cb=" + Date.now(), {cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP " + r.status);
 
-try{
-
-const r = await fetch(
-"results_public.json?cb="+Date.now(),
-{cache:"no-store"}
-);
-
-if(!r.ok) throw new Error("HTTP "+r.status);
-
-results = await r.json();
-
-renderTabs();
-render();
-
-}catch(e){
-
-document.getElementById("winnersContent").innerHTML=
-`<div class="error">
-<b>Could not load results_public.json</b><br>
-Make sure viewer.html and results_public.json are in the same folder.
-</div>`;
-
-}
-
+    results = await r.json();
+    renderTabs();
+    render();
+  }catch(e){
+    document.getElementById("winnersContent").innerHTML =
+      `<div class="error">
+        <b>Could not load results_public.json</b><br>
+        Make sure viewer.html and results_public.json are in the same folder.
+      </div>`;
+  }
 }
 
 loadResults();
-setInterval(loadResults,30000);
-
+setInterval(loadResults, 30000);
 </script>
-
 </body>
 </html>
