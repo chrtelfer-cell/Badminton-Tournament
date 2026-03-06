@@ -409,6 +409,12 @@ function renderTeam(display, winner){
   `;
 }
 
+function matchLabel(match){
+  if(match.id === "GF-1") return "Grand Final";
+  if(match.id === "GF-2") return "Grand Final Reset";
+  return match.id;
+}
+
 function renderMatch(matches, match){
   const team1Display = getDisplayName(matches, match, 1);
   const team2Display = getDisplayName(matches, match, 2);
@@ -419,7 +425,7 @@ function renderMatch(matches, match){
 
   return `
     <div class="match">
-      <div class="match-label">${escapeHtml(match.id)}</div>
+      <div class="match-label">${escapeHtml(matchLabel(match))}</div>
       ${renderTeam(team1Display, aWin)}
       ${renderTeam(team2Display, bWin)}
       <div class="match-footer">
@@ -603,20 +609,27 @@ function renderConnectorSvg(totalWidth, totalHeight, paths){
 function renderCombinedWinnersAndFinal(containerId, winnerGroups, finalGroups, emptyMessage, matches){
   const container = document.getElementById(containerId);
 
-  if(winnerGroups.length === 0 && finalGroups.length === 0){
+  const visibleFinalGroups = finalGroups
+    .map(group => ({
+      ...group,
+      matches: group.matches.filter(m => m.id !== "GF-2" || (m.team1 && m.team2))
+    }))
+    .filter(group => group.matches.length > 0);
+
+  if(winnerGroups.length === 0 && visibleFinalGroups.length === 0){
     container.innerHTML = `<div class="small">${emptyMessage}</div>`;
     return;
   }
 
-  const combinedGroups = [...winnerGroups, ...finalGroups];
+  const combinedGroups = [...winnerGroups, ...visibleFinalGroups];
   const grid = el("div", { class:"bracket-grid" });
   const sectionHeight = Math.max(
     getSectionHeight(winnerGroups, "winners"),
-    getSectionHeight(finalGroups, "finals", winnerGroups),
+    visibleFinalGroups.length ? getSectionHeight(visibleFinalGroups, "finals", winnerGroups) : MATCH_HEIGHT,
     getFinalTop(winnerGroups) + MATCH_HEIGHT
   );
 
-  const positionMap = buildPositionMapForCombined(winnerGroups, finalGroups);
+  const positionMap = buildPositionMapForCombined(winnerGroups, visibleFinalGroups);
   const predMap = buildPredMap(matches);
 
   combinedGroups.forEach((group, combinedIndex)=>{
@@ -677,7 +690,7 @@ function renderLosersSection(containerId, loserGroups, emptyMessage, matches){
   const positionMap = buildPositionMapForLosers(loserGroups);
   const predMap = buildPredMap(matches);
 
-  loserGroups.forEach((group, roundIndex)=>{
+  loserGroups.forEach((group)=>{
     const col = el("div", { class:"round-col" });
     col.appendChild(el("h3", {}, escapeHtml(group.round)));
 
