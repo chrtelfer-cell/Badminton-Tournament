@@ -27,7 +27,7 @@ body{
 }
 
 .wrap{
-  max-width:1900px;
+  max-width:1850px;
   margin:0 auto;
 }
 
@@ -87,22 +87,6 @@ h1{
   background:#eef2ff;
   border:1px solid #c7d2fe;
   color:#1e3a8a;
-}
-
-.page-grid{
-  display:grid;
-  grid-template-columns: 1fr 320px 1fr;
-  gap:16px;
-  align-items:start;
-}
-
-.section-card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px;
-  overflow-x:auto;
-  min-height:120px;
 }
 
 .section-title{
@@ -228,21 +212,11 @@ h1{
   font-style:italic;
 }
 
-.final-center{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:100%;
-}
-
-.final-shell{
-  width:100%;
-  max-width:280px;
-}
-
-@media (max-width: 1300px){
-  .page-grid{
-    grid-template-columns: 1fr;
+@media (max-width: 900px){
+  .round-col{
+    width:185px;
+    min-width:185px;
+    flex-basis:185px;
   }
 }
 </style>
@@ -265,23 +239,14 @@ h1{
     </div>
   </div>
 
-  <div class="page-grid">
-    <div class="section-card">
-      <h2 class="section-title">Winners Bracket</h2>
-      <div id="winnersContent"></div>
-    </div>
+  <div class="card">
+    <h2 class="section-title">Winners Bracket + Grand Final</h2>
+    <div id="winnersContent"></div>
+  </div>
 
-    <div class="section-card final-center">
-      <div class="final-shell">
-        <h2 class="section-title" style="text-align:center;">Grand Final</h2>
-        <div id="finalContent"></div>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <h2 class="section-title">Losers Bracket</h2>
-      <div id="losersContent"></div>
-    </div>
+  <div class="card">
+    <h2 class="section-title">Losers Bracket</h2>
+    <div id="losersContent"></div>
   </div>
 </div>
 
@@ -497,11 +462,13 @@ function getLosersTop(match, shellSize){
   return 0;
 }
 
-function getFinalTop(matchIndex){
-  return matchIndex * WINNERS_ROUND1_STEP;
+function getFinalTop(roundIndex, matchIndex, winnerGroups){
+  const lastWinnerRoundIndex = Math.max(0, winnerGroups.length - 1);
+  const lastWinnerMatchTop = getWinnersTop(lastWinnerRoundIndex, 0);
+  return lastWinnerMatchTop;
 }
 
-function getSectionHeight(roundGroups, type){
+function getSectionHeight(roundGroups, type, winnerGroups = []){
   if(roundGroups.length === 0) return MATCH_HEIGHT;
 
   let tallest = MATCH_HEIGHT;
@@ -517,7 +484,7 @@ function getSectionHeight(roundGroups, type){
       }else if(type === "losers"){
         top = getLosersTop(match, currentShellSize);
       }else{
-        top = getFinalTop(matchIndex);
+        top = getFinalTop(roundIndex, matchIndex, winnerGroups);
       }
 
       if(top > maxTop) maxTop = top;
@@ -528,6 +495,49 @@ function getSectionHeight(roundGroups, type){
   });
 
   return tallest;
+}
+
+function renderCombinedWinnersAndFinal(containerId, winnerGroups, finalGroups, emptyMessage, matches){
+  const container = document.getElementById(containerId);
+
+  if(winnerGroups.length === 0 && finalGroups.length === 0){
+    container.innerHTML = `<div class="small">${emptyMessage}</div>`;
+    return;
+  }
+
+  const combinedGroups = [...winnerGroups, ...finalGroups];
+  const grid = el("div", { class:"bracket-grid" });
+  const sectionHeight = getSectionHeight(combinedGroups, "winners", winnerGroups);
+
+  combinedGroups.forEach((group, combinedIndex)=>{
+    const col = el("div", { class:"round-col" });
+    col.appendChild(el("h3", {}, escapeHtml(group.round === "GF" ? "Grand Final" : group.round)));
+
+    const wrap = el("div", { class:"matches-wrap" });
+    wrap.style.height = `${sectionHeight}px`;
+
+    group.matches.forEach((match, matchIndex)=>{
+      let top = 0;
+
+      if(group.round === "GF"){
+        top = getFinalTop(combinedIndex, matchIndex, winnerGroups);
+      } else {
+        top = getWinnersTop(combinedIndex, matchIndex);
+      }
+
+      const holder = document.createElement("div");
+      holder.className = "match-pos";
+      holder.style.top = `${top}px`;
+      holder.innerHTML = renderMatch(matches, match);
+      wrap.appendChild(holder);
+    });
+
+    col.appendChild(wrap);
+    grid.appendChild(col);
+  });
+
+  container.innerHTML = "";
+  container.appendChild(grid);
 }
 
 function renderBracketSection(containerId, roundGroups, emptyMessage, type, matches){
@@ -556,7 +566,7 @@ function renderBracketSection(containerId, roundGroups, emptyMessage, type, matc
       }else if(type === "losers"){
         top = getLosersTop(match, currentShellSize);
       }else{
-        top = getFinalTop(matchIndex);
+        top = 0;
       }
 
       const holder = document.createElement("div");
@@ -574,34 +584,13 @@ function renderBracketSection(containerId, roundGroups, emptyMessage, type, matc
   container.appendChild(grid);
 }
 
-function renderFinalCenter(containerId, roundGroups, emptyMessage, matches){
-  const container = document.getElementById(containerId);
-
-  if(roundGroups.length === 0){
-    container.innerHTML = `<div class="small" style="text-align:center;">${emptyMessage}</div>`;
-    return;
-  }
-
-  const group = roundGroups[0];
-  const match = group.matches[0];
-
-  if(!match){
-    container.innerHTML = `<div class="small" style="text-align:center;">${emptyMessage}</div>`;
-    return;
-  }
-
-  container.innerHTML = renderMatch(matches, match);
-}
-
 function render(){
   const winnersContent = document.getElementById("winnersContent");
   const losersContent = document.getElementById("losersContent");
-  const finalContent = document.getElementById("finalContent");
 
   if(!results){
     winnersContent.innerHTML = `<div class="error">No results loaded yet.</div>`;
     losersContent.innerHTML = `<div class="small">No results loaded yet.</div>`;
-    finalContent.innerHTML = `<div class="small">No results loaded yet.</div>`;
     return;
   }
 
@@ -609,7 +598,6 @@ function render(){
   if(!div){
     winnersContent.innerHTML = `<div class="error">Division not found</div>`;
     losersContent.innerHTML = "";
-    finalContent.innerHTML = "";
     return;
   }
 
@@ -618,18 +606,11 @@ function render(){
 
   const grouped = classifyRounds(matches);
 
-  renderBracketSection(
+  renderCombinedWinnersAndFinal(
     "winnersContent",
     grouped.winners,
-    "No winners bracket matches yet.",
-    "winners",
-    matches
-  );
-
-  renderFinalCenter(
-    "finalContent",
     grouped.finals,
-    "No final yet.",
+    "No winners bracket matches yet.",
     matches
   );
 
@@ -662,7 +643,6 @@ async function loadResults(){
         Make sure viewer.html and results_public.json are in the same folder.
       </div>`;
     document.getElementById("losersContent").innerHTML = "";
-    document.getElementById("finalContent").innerHTML = "";
   }
 }
 
