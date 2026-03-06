@@ -24,7 +24,7 @@ body{
 }
 
 .wrap{
-  max-width:1800px;
+  max-width:1900px;
   margin:0 auto;
 }
 
@@ -300,7 +300,7 @@ function classifyRounds(matches){
 function sortRoundGroups(obj){
   return Object.keys(obj)
     .sort((a,b)=>{
-      const parse = (s)=>{
+      const parse = s => {
         const n = parseInt(s.replace(/[^\d]/g,""),10);
         return Number.isNaN(n) ? 999 : n;
       };
@@ -334,47 +334,53 @@ function renderMatch(match){
   `;
 }
 
-/*
-  For true bracket centering:
-  - Round 1 matches are stacked normally.
-  - Every later round match is vertically centered between the two prior-round matches that feed into it.
-  This works cleanly for the winners bracket and also improves the losers bracket display a lot.
-*/
-function computeRoundPositions(roundGroups){
-  const positions = [];
+function buildPredecessorMap(matches){
+  const predMap = {};
 
-  if(roundGroups.length === 0) return positions;
-
-  // Round 1 positions
-  positions[0] = [];
-  for(let i=0;i<roundGroups[0].matches.length;i++){
-    positions[0].push(i * (MATCH_HEIGHT + ROUND1_GAP));
-  }
-
-  // Later rounds: midpoint of previous-pair matches
-  for(let r=1;r<roundGroups.length;r++){
-    positions[r] = [];
-    const prev = positions[r-1];
-    const count = roundGroups[r].matches.length;
-
-    for(let i=0;i<count;i++){
-      const a = prev[i*2];
-      const b = prev[i*2 + 1];
-
-      if(a !== undefined && b !== undefined){
-        positions[r].push(((a + b) / 2));
-      } else if(a !== undefined){
-        positions[r].push(a);
-      } else {
-        positions[r].push(i * (MATCH_HEIGHT + ROUND1_GAP));
-      }
+  matches.forEach(m=>{
+    if(m.nextWin?.matchId){
+      if(!predMap[m.nextWin.matchId]) predMap[m.nextWin.matchId] = [];
+      predMap[m.nextWin.matchId].push(m.id);
     }
-  }
+    if(m.nextLose?.matchId){
+      if(!predMap[m.nextLose.matchId]) predMap[m.nextLose.matchId] = [];
+      predMap[m.nextLose.matchId].push(m.id);
+    }
+  });
 
-  return positions;
+  return predMap;
 }
 
-function renderBracketSection(containerId, roundGroups, emptyMessage){
+function computePositions(roundGroups, allMatches){
+  const positionsById = {};
+  const predMap = buildPredecessorMap(allMatches);
+
+  if(roundGroups.length === 0) return positionsById;
+
+  roundGroups[0].matches.forEach((m, i)=>{
+    positionsById[m.id] = i * (MATCH_HEIGHT + ROUND1_GAP);
+  });
+
+  for(let r=1; r<roundGroups.length; r++){
+    roundGroups[r].matches.forEach((m, i)=>{
+      const preds = predMap[m.id] || [];
+
+      if(preds.length >= 2 &&
+         positionsById[preds[0]] !== undefined &&
+         positionsById[preds[1]] !== undefined){
+        positionsById[m.id] = (positionsById[preds[0]] + positionsById[preds[1]]) / 2;
+      } else if(preds.length === 1 && positionsById[preds[0]] !== undefined){
+        positionsById[m.id] = positionsById[preds[0]];
+      } else {
+        positionsById[m.id] = i * (MATCH_HEIGHT + ROUND1_GAP);
+      }
+    });
+  }
+
+  return positionsById;
+}
+
+function renderBracketSection(containerId, roundGroups, emptyMessage, allMatches){
   const container = document.getElementById(containerId);
 
   if(roundGroups.length === 0){
@@ -382,25 +388,23 @@ function renderBracketSection(containerId, roundGroups, emptyMessage){
     return;
   }
 
-  const positions = computeRoundPositions(roundGroups);
+  const positionsById = computePositions(roundGroups, allMatches);
   const grid = el("div", {class:"bracket-grid"});
 
-  // total height based on round 1
-  const baseHeight = positions[0].length
-    ? positions[0][positions[0].length - 1] + MATCH_HEIGHT
-    : MATCH_HEIGHT;
+  const ys = Object.values(positionsById);
+  const baseHeight = ys.length ? Math.max(...ys) + MATCH_HEIGHT : MATCH_HEIGHT;
 
-  roundGroups.forEach((group, roundIndex)=>{
+  roundGroups.forEach(group=>{
     const col = el("div", {class:"round-col"});
     col.appendChild(el("h3", {}, escapeHtml(group.round === "GF" ? "Grand Final" : group.round)));
 
     const matchesWrap = el("div", {class:"matches-wrap"});
     matchesWrap.style.height = `${baseHeight}px`;
 
-    group.matches.forEach((match, i)=>{
+    group.matches.forEach(match=>{
       const wrapper = document.createElement("div");
       wrapper.className = "match-pos";
-      wrapper.style.top = `${positions[roundIndex][i]}px`;
+      wrapper.style.top = `${positionsById[match.id] || 0}px`;
       wrapper.innerHTML = renderMatch(match);
       matchesWrap.appendChild(wrapper);
     });
@@ -436,22 +440,29 @@ function render(){
   const matches = div.matches || [];
   const grouped = classifyRounds(matches);
 
+  const winnerMatches = matches.filter(m => (m.round || "").startsWith("W"));
+  const loserMatches  = matches.filter(m => (m.round || "").startsWith("L"));
+  const finalMatches  = matches.filter(m => !(m.round || "").startsWith("W") && !(m.round || "").startsWith("L"));
+
   renderBracketSection(
     "winnersContent",
     grouped.winners,
-    "No winners bracket matches yet."
+    "No winners bracket matches yet.",
+    winnerMatches
   );
 
   renderBracketSection(
     "losersContent",
     grouped.losers,
-    "No losers bracket matches yet."
+    "No losers bracket matches yet.",
+    loserMatches
   );
 
   renderBracketSection(
     "finalContent",
     grouped.finals,
-    "No final yet."
+    "No final yet.",
+    finalMatches
   );
 
   document.getElementById("lastUpdated").textContent =
