@@ -14,6 +14,7 @@
   --line:#d9dee7;
   --win:#eafaf0;
   --win-border:#9fdfb3;
+  --connector:#94a3b8;
 }
 
 *{ box-sizing:border-box; }
@@ -100,12 +101,14 @@ h1{
   align-items:flex-start;
   min-width:max-content;
   padding-bottom:6px;
+  position:relative;
 }
 
 .round-col{
   width:210px;
   min-width:210px;
   flex:0 0 210px;
+  position:relative;
 }
 
 .round-col h3{
@@ -119,10 +122,28 @@ h1{
   position:relative;
 }
 
+.connectors{
+  position:absolute;
+  left:0;
+  top:0;
+  pointer-events:none;
+  overflow:visible;
+  z-index:0;
+}
+
+.connector-path{
+  stroke:var(--connector);
+  stroke-width:2;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
 .match-pos{
   position:absolute;
   left:0;
   right:0;
+  z-index:1;
 }
 
 .match{
@@ -265,6 +286,8 @@ let currentShellSize = 0;
 
 const MATCH_HEIGHT = 96;
 const WINNERS_ROUND1_STEP = 128;
+const COL_WIDTH = 210;
+const COL_GAP = 20;
 
 function escapeHtml(s){
   return String(s)
@@ -462,10 +485,9 @@ function getLosersTop(match, shellSize){
   return 0;
 }
 
-function getFinalTop(roundIndex, matchIndex, winnerGroups){
+function getFinalTop(winnerGroups){
   const lastWinnerRoundIndex = Math.max(0, winnerGroups.length - 1);
-  const lastWinnerMatchTop = getWinnersTop(lastWinnerRoundIndex, 0);
-  return lastWinnerMatchTop;
+  return getWinnersTop(lastWinnerRoundIndex, 0);
 }
 
 function getSectionHeight(roundGroups, type, winnerGroups = []){
@@ -484,7 +506,7 @@ function getSectionHeight(roundGroups, type, winnerGroups = []){
       }else if(type === "losers"){
         top = getLosersTop(match, currentShellSize);
       }else{
-        top = getFinalTop(roundIndex, matchIndex, winnerGroups);
+        top = getFinalTop(winnerGroups);
       }
 
       if(top > maxTop) maxTop = top;
@@ -497,6 +519,87 @@ function getSectionHeight(roundGroups, type, winnerGroups = []){
   return tallest;
 }
 
+function buildPredMap(matches){
+  const predMap = {};
+  for(const m of matches){
+    if(m.nextWin?.matchId){
+      if(!predMap[m.nextWin.matchId]) predMap[m.nextWin.matchId] = [];
+      predMap[m.nextWin.matchId].push({ sourceId:m.id, type:"win", slot:m.nextWin.slot });
+    }
+    if(m.nextLose?.matchId){
+      if(!predMap[m.nextLose.matchId]) predMap[m.nextLose.matchId] = [];
+      predMap[m.nextLose.matchId].push({ sourceId:m.id, type:"lose", slot:m.nextLose.slot });
+    }
+  }
+  return predMap;
+}
+
+function buildPositionMapForCombined(winnerGroups, finalGroups){
+  const map = {};
+  winnerGroups.forEach((group, roundIndex)=>{
+    group.matches.forEach((match, matchIndex)=>{
+      map[match.id] = {
+        col: roundIndex,
+        top: getWinnersTop(roundIndex, matchIndex)
+      };
+    });
+  });
+
+  const gfCol = winnerGroups.length;
+  finalGroups.forEach(group=>{
+    group.matches.forEach(match=>{
+      map[match.id] = {
+        col: gfCol,
+        top: getFinalTop(winnerGroups)
+      };
+    });
+  });
+
+  return map;
+}
+
+function buildPositionMapForLosers(loserGroups){
+  const map = {};
+  loserGroups.forEach((group, roundIndex)=>{
+    group.matches.forEach(match=>{
+      map[match.id] = {
+        col: roundIndex,
+        top: getLosersTop(match, currentShellSize)
+      };
+    });
+  });
+  return map;
+}
+
+function pathBetween(sourcePos, targetPos){
+  const sourceX = sourcePos.col * (COL_WIDTH + COL_GAP) + COL_WIDTH;
+  const sourceY = sourcePos.top + MATCH_HEIGHT / 2;
+
+  const targetX = targetPos.col * (COL_WIDTH + COL_GAP);
+  const targetY = targetPos.top + MATCH_HEIGHT / 2;
+
+  const midX = (sourceX + targetX) / 2;
+
+  return `M ${sourceX} ${sourceY} L ${midX} ${sourceY} L ${midX} ${targetY} L ${targetX} ${targetY}`;
+}
+
+function renderConnectorSvg(totalWidth, totalHeight, paths){
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "connectors");
+  svg.setAttribute("width", totalWidth);
+  svg.setAttribute("height", totalHeight);
+  svg.setAttribute("viewBox", `0 0 ${totalWidth} ${totalHeight}`);
+
+  paths.forEach(d=>{
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", d);
+    p.setAttribute("class", "connector-path");
+    svg.appendChild(p);
+  });
+
+  return svg;
+}
+
 function renderCombinedWinnersAndFinal(containerId, winnerGroups, finalGroups, emptyMessage, matches){
   const container = document.getElementById(containerId);
 
@@ -507,7 +610,14 @@ function renderCombinedWinnersAndFinal(containerId, winnerGroups, finalGroups, e
 
   const combinedGroups = [...winnerGroups, ...finalGroups];
   const grid = el("div", { class:"bracket-grid" });
-  const sectionHeight = getSectionHeight(combinedGroups, "winners", winnerGroups);
+  const sectionHeight = Math.max(
+    getSectionHeight(winnerGroups, "winners"),
+    getSectionHeight(finalGroups, "finals", winnerGroups),
+    getFinalTop(winnerGroups) + MATCH_HEIGHT
+  );
+
+  const positionMap = buildPositionMapForCombined(winnerGroups, finalGroups);
+  const predMap = buildPredMap(matches);
 
   combinedGroups.forEach((group, combinedIndex)=>{
     const col = el("div", { class:"round-col" });
@@ -520,7 +630,7 @@ function renderCombinedWinnersAndFinal(containerId, winnerGroups, finalGroups, e
       let top = 0;
 
       if(group.round === "GF"){
-        top = getFinalTop(combinedIndex, matchIndex, winnerGroups);
+        top = getFinalTop(winnerGroups);
       } else {
         top = getWinnersTop(combinedIndex, matchIndex);
       }
@@ -536,38 +646,46 @@ function renderCombinedWinnersAndFinal(containerId, winnerGroups, finalGroups, e
     grid.appendChild(col);
   });
 
+  const totalWidth = combinedGroups.length * COL_WIDTH + (combinedGroups.length - 1) * COL_GAP;
+  const paths = [];
+
+  for(const targetId in predMap){
+    if(!positionMap[targetId]) continue;
+    for(const pred of predMap[targetId]){
+      if(positionMap[pred.sourceId]){
+        paths.push(pathBetween(positionMap[pred.sourceId], positionMap[targetId]));
+      }
+    }
+  }
+
+  grid.appendChild(renderConnectorSvg(totalWidth, sectionHeight, paths));
+
   container.innerHTML = "";
   container.appendChild(grid);
 }
 
-function renderBracketSection(containerId, roundGroups, emptyMessage, type, matches){
+function renderLosersSection(containerId, loserGroups, emptyMessage, matches){
   const container = document.getElementById(containerId);
 
-  if(roundGroups.length === 0){
+  if(loserGroups.length === 0){
     container.innerHTML = `<div class="small">${emptyMessage}</div>`;
     return;
   }
 
   const grid = el("div", { class:"bracket-grid" });
-  const sectionHeight = getSectionHeight(roundGroups, type);
+  const sectionHeight = getSectionHeight(loserGroups, "losers");
+  const positionMap = buildPositionMapForLosers(loserGroups);
+  const predMap = buildPredMap(matches);
 
-  roundGroups.forEach((group, roundIndex)=>{
+  loserGroups.forEach((group, roundIndex)=>{
     const col = el("div", { class:"round-col" });
-    col.appendChild(el("h3", {}, escapeHtml(group.round === "GF" ? "Grand Final" : group.round)));
+    col.appendChild(el("h3", {}, escapeHtml(group.round)));
 
     const wrap = el("div", { class:"matches-wrap" });
     wrap.style.height = `${sectionHeight}px`;
 
-    group.matches.forEach((match, matchIndex)=>{
-      let top = 0;
-
-      if(type === "winners"){
-        top = getWinnersTop(roundIndex, matchIndex);
-      }else if(type === "losers"){
-        top = getLosersTop(match, currentShellSize);
-      }else{
-        top = 0;
-      }
+    group.matches.forEach(match=>{
+      const top = getLosersTop(match, currentShellSize);
 
       const holder = document.createElement("div");
       holder.className = "match-pos";
@@ -579,6 +697,20 @@ function renderBracketSection(containerId, roundGroups, emptyMessage, type, matc
     col.appendChild(wrap);
     grid.appendChild(col);
   });
+
+  const totalWidth = loserGroups.length * COL_WIDTH + (loserGroups.length - 1) * COL_GAP;
+  const paths = [];
+
+  for(const targetId in predMap){
+    if(!positionMap[targetId]) continue;
+    for(const pred of predMap[targetId]){
+      if(positionMap[pred.sourceId]){
+        paths.push(pathBetween(positionMap[pred.sourceId], positionMap[targetId]));
+      }
+    }
+  }
+
+  grid.appendChild(renderConnectorSvg(totalWidth, sectionHeight, paths));
 
   container.innerHTML = "";
   container.appendChild(grid);
@@ -614,11 +746,10 @@ function render(){
     matches
   );
 
-  renderBracketSection(
+  renderLosersSection(
     "losersContent",
     grouped.losers,
     "No losers bracket matches yet.",
-    "losers",
     matches
   );
 
