@@ -4,412 +4,476 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Badminton Tournament – Live Brackets</title>
+
 <style>
-  :root{
-    --bg:#f6f7fb;
-    --card:#fff;
-    --ink:#111;
-    --muted:#555;
-    --line:#d9dee7;
-    --accent:#1f60d6;
-    --win:#eafaf0;
-    --win-border:#9fdfb3;
-  }
 
-  body{
-    font-family:system-ui,Segoe UI,Arial,sans-serif;
-    margin:18px;
-    background:var(--bg);
-    color:var(--ink);
-  }
+:root{
+  --bg:#f6f7fb;
+  --card:#fff;
+  --ink:#111;
+  --muted:#555;
+  --line:#d9dee7;
+  --accent:#1f60d6;
+  --win:#eafaf0;
+  --win-border:#9fdfb3;
+}
 
-  .wrap{
-    max-width:1500px;
-    margin:0 auto;
-  }
+body{
+  font-family:system-ui,Segoe UI,Arial,sans-serif;
+  margin:18px;
+  background:var(--bg);
+  color:var(--ink);
+}
 
-  h1{
-    margin:0 0 6px;
-  }
+.wrap{
+  max-width:1600px;
+  margin:0 auto;
+}
 
-  .sub{
-    margin:0 0 14px;
-    color:var(--muted);
-  }
+h1{
+  margin:0 0 6px;
+}
 
-  .tabs{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin:14px 0;
-  }
+.sub{
+  margin:0 0 14px;
+  color:var(--muted);
+}
 
-  .tab{
-    padding:10px 12px;
-    border-radius:10px;
-    border:1px solid var(--line);
-    background:var(--card);
-    cursor:pointer;
-  }
+.tabs{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:14px 0;
+}
 
-  .tab.active{
-    border-color:#333;
-    font-weight:600;
-  }
+.tab{
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--card);
+  cursor:pointer;
+}
 
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:14px;
-    margin-bottom:16px;
-  }
+.tab.active{
+  border-color:#333;
+  font-weight:600;
+}
 
-  .meta{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
-    margin-top:10px;
-    color:var(--muted);
-    font-size:.95rem;
-  }
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:16px;
+}
 
-  .pill{
-    display:inline-block;
-    padding:4px 10px;
-    border-radius:999px;
-    background:#eef2ff;
-    border:1px solid #c7d2fe;
-    color:#1e3a8a;
-  }
+.meta{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:.95rem;
+}
 
-  .error{
-    padding:10px;
-    border:1px solid #fecaca;
-    background:#fff1f2;
-    border-radius:10px;
-    color:#991b1b;
-  }
+.pill{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  background:#eef2ff;
+  border:1px solid #c7d2fe;
+  color:#1e3a8a;
+}
 
-  .section-title{
-    margin:0 0 12px;
-    font-size:1.1rem;
-  }
+.section-title{
+  margin:0 0 12px;
+  font-size:1.1rem;
+}
 
-  .bracket-grid{
-    display:grid;
-    grid-auto-flow:column;
-    grid-auto-columns:minmax(220px, 1fr);
-    gap:18px;
-    align-items:start;
-    overflow-x:auto;
-    padding-bottom:8px;
-  }
+.bracket-grid{
+  display:flex;
+  gap:36px;
+  align-items:flex-start;
+  overflow-x:auto;
+  padding-bottom:12px;
+}
 
-  .round-col{
-    min-width:220px;
-  }
+.round-col{
+  min-width:240px;
+  flex:0 0 240px;
+}
 
-  .round-col h3{
-    margin:0 0 12px;
-    font-size:1rem;
-    color:#334155;
-    text-align:center;
-  }
+.round-col h3{
+  margin:0 0 12px;
+  font-size:1rem;
+  color:#334155;
+  text-align:center;
+}
 
-  .match{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:10px;
-    margin:14px 0 22px;
-    overflow:hidden;
-    box-shadow:0 1px 1px rgba(0,0,0,.03);
-  }
+.matches-wrap{
+  position:relative;
+}
 
-  .team{
-    padding:10px 12px;
-    border-bottom:1px solid #eef2f7;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:8px;
-    min-height:42px;
-  }
+.match{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 1px 1px rgba(0,0,0,.03);
+}
 
-  .team:last-child{
-    border-bottom:none;
-  }
+.team{
+  padding:10px 12px;
+  border-bottom:1px solid #eef2f7;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
 
-  .team.win{
-    background:var(--win);
-    border-left:4px solid var(--win-border);
-    padding-left:8px;
-  }
+.team:last-child{
+  border-bottom:none;
+}
 
-  .winner-mark{
-    font-weight:700;
-    color:#15803d;
-  }
+.team.win{
+  background:var(--win);
+  border-left:4px solid var(--win-border);
+  padding-left:8px;
+}
 
-  .match-footer{
-    padding:8px 12px;
-    font-size:.85rem;
-    color:#64748b;
-    border-top:1px solid #eef2f7;
-    background:#fafbfd;
-  }
+.winner-mark{
+  font-weight:700;
+  color:#15803d;
+}
 
-  .small{
-    color:var(--muted);
-    font-size:.9rem;
-  }
+.match-footer{
+  padding:8px 12px;
+  font-size:.85rem;
+  color:#64748b;
+  border-top:1px solid #eef2f7;
+  background:#fafbfd;
+}
 
-  .legend{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-  }
+.small{
+  color:var(--muted);
+  font-size:.9rem;
+}
 
-  .dot{
-    width:10px;
-    height:10px;
-    border-radius:999px;
-    display:inline-block;
-    margin-right:6px;
-  }
+.legend{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-  .dot.win{ background:#22c55e; }
-  .dot.pending{ background:#94a3b8; }
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  display:inline-block;
+  margin-right:6px;
+}
 
-  .final-box{
-    max-width:420px;
-  }
+.dot.win{ background:#22c55e; }
+.dot.pending{ background:#94a3b8; }
 
-  @media(max-width:900px){
-    .bracket-grid{
-      grid-auto-columns:minmax(260px, 260px);
-    }
-  }
+.error{
+  padding:10px;
+  border:1px solid #fecaca;
+  background:#fff1f2;
+  border-radius:10px;
+  color:#991b1b;
+}
+
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
-  <h1>🏸 Badminton Tournament – Live Brackets</h1>
-  <p class="sub">Auto-refreshes every 30 seconds. Showing <b>school names only</b>.</p>
 
-  <div class="tabs" id="tabs"></div>
+<h1>🏸 Badminton Tournament – Live Brackets</h1>
+<p class="sub">Auto-refreshes every 30 seconds. Showing <b>school names only</b>.</p>
 
-  <div class="card">
-    <div id="status" class="meta">
-      <span class="pill" id="lastUpdated">Loading…</span>
-      <span class="legend small">
-        <span><span class="dot win"></span>Winner chosen</span>
-        <span><span class="dot pending"></span>Not decided</span>
-      </span>
-    </div>
-  </div>
+<div class="tabs" id="tabs"></div>
 
-  <div class="card">
-    <h2 class="section-title">Winners Bracket</h2>
-    <div id="winnersContent"></div>
-  </div>
+<div class="card">
+<div class="meta">
+<span class="pill" id="lastUpdated">Loading…</span>
+<span class="legend small">
+<span><span class="dot win"></span>Winner chosen</span>
+<span><span class="dot pending"></span>Not decided</span>
+</span>
+</div>
+</div>
 
-  <div class="card">
-    <h2 class="section-title">Losers Bracket</h2>
-    <div id="losersContent"></div>
-  </div>
+<div class="card">
+<h2 class="section-title">Winners Bracket</h2>
+<div id="winnersContent"></div>
+</div>
 
-  <div class="card final-box">
-    <h2 class="section-title">Grand Final</h2>
-    <div id="finalContent"></div>
-  </div>
+<div class="card">
+<h2 class="section-title">Losers Bracket</h2>
+<div id="losersContent"></div>
+</div>
+
+<div class="card">
+<h2 class="section-title">Grand Final</h2>
+<div id="finalContent"></div>
+</div>
+
 </div>
 
 <script>
+
 const DIV_KEYS = [
-  "Boys Singles",
-  "Girls Singles",
-  "Boys Doubles",
-  "Girls Doubles",
-  "Mixed Doubles"
+"Boys Singles",
+"Girls Singles",
+"Boys Doubles",
+"Girls Doubles",
+"Mixed Doubles"
 ];
 
 let results = null;
 let activeDiv = DIV_KEYS[0];
 
 function escapeHtml(s){
-  return String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+return String(s)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;");
 }
 
 function el(tag, attrs={}, html=""){
-  const n = document.createElement(tag);
-  Object.entries(attrs).forEach(([k,v]) => n.setAttribute(k, v));
-  if(html) n.innerHTML = html;
-  return n;
+const n = document.createElement(tag);
+Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));
+if(html) n.innerHTML = html;
+return n;
 }
 
 function renderTabs(){
-  const tabs = document.getElementById("tabs");
-  tabs.innerHTML = "";
-  DIV_KEYS.forEach(key=>{
-    const t = el("div", {class:"tab" + (key===activeDiv ? " active" : "")});
-    t.textContent = key;
-    t.onclick = ()=>{
-      activeDiv = key;
-      renderTabs();
-      render();
-    };
-    tabs.appendChild(t);
-  });
+const tabs = document.getElementById("tabs");
+tabs.innerHTML = "";
+
+DIV_KEYS.forEach(key=>{
+const t = el("div",{class:"tab"+(key===activeDiv?" active":"")});
+t.textContent = key;
+t.onclick=()=>{
+activeDiv=key;
+renderTabs();
+render();
+};
+tabs.appendChild(t);
+});
 }
 
 function classifyRounds(matches){
-  const winners = {};
-  const losers = {};
-  const finals = {};
 
-  for(const m of matches){
-    const r = m.round || "Round";
-    if(r.startsWith("W")){
-      if(!winners[r]) winners[r] = [];
-      winners[r].push(m);
-    } else if(r.startsWith("L")){
-      if(!losers[r]) losers[r] = [];
-      losers[r].push(m);
-    } else {
-      if(!finals[r]) finals[r] = [];
-      finals[r].push(m);
-    }
-  }
+const winners = {};
+const losers = {};
+const finals = {};
 
-  return {
-    winners: sortRoundGroups(winners, "W"),
-    losers: sortRoundGroups(losers, "L"),
-    finals: sortRoundGroups(finals, "GF")
-  };
+for(const m of matches){
+
+const r = m.round || "Round";
+
+if(r.startsWith("W")){
+if(!winners[r]) winners[r]=[];
+winners[r].push(m);
+}
+else if(r.startsWith("L")){
+if(!losers[r]) losers[r]=[];
+losers[r].push(m);
+}
+else{
+if(!finals[r]) finals[r]=[];
+finals[r].push(m);
 }
 
-function sortRoundGroups(obj, prefix){
-  return Object.keys(obj)
-    .sort((a,b)=>{
-      if(a === "GF") return 1;
-      if(b === "GF") return -1;
-      const na = parseInt(a.replace(prefix,"").replace("-",""), 10);
-      const nb = parseInt(b.replace(prefix,"").replace("-",""), 10);
-      if(!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
-      return a.localeCompare(b);
-    })
-    .map(key => ({ round:key, matches:obj[key] }));
+}
+
+return{
+winners:sortRoundGroups(winners),
+losers:sortRoundGroups(losers),
+finals:sortRoundGroups(finals)
+};
+
+}
+
+function sortRoundGroups(obj){
+return Object.keys(obj)
+.sort()
+.map(key=>({round:key,matches:obj[key]}));
 }
 
 function renderTeam(name, winner){
-  return `
-    <div class="team ${winner ? "win" : ""}">
-      <span>${escapeHtml(name || "TBD")}</span>
-      <span class="winner-mark">${winner ? "W" : ""}</span>
-    </div>
-  `;
+return `
+<div class="team ${winner?"win":""}">
+<span>${escapeHtml(name||"TBD")}</span>
+<span class="winner-mark">${winner?"W":""}</span>
+</div>
+`;
 }
 
 function renderMatch(match){
-  const winner = match.winner || null;
-  const aWin = winner && winner === match.team1;
-  const bWin = winner && winner === match.team2;
 
-  return `
-    <div class="match">
-      ${renderTeam(match.team1 || "TBD", aWin)}
-      ${renderTeam(match.team2 || "TBD", bWin)}
-      <div class="match-footer">
-        Winner: ${winner ? escapeHtml(winner) : "—"}
-      </div>
-    </div>
-  `;
+const winner = match.winner || null;
+
+const aWin = winner && winner===match.team1;
+const bWin = winner && winner===match.team2;
+
+return `
+<div class="match">
+${renderTeam(match.team1,aWin)}
+${renderTeam(match.team2,bWin)}
+<div class="match-footer">
+Winner: ${winner?escapeHtml(winner):"—"}
+</div>
+</div>
+`;
+
 }
 
 function renderBracketSection(containerId, roundGroups, emptyMessage){
-  const container = document.getElementById(containerId);
 
-  if(roundGroups.length === 0){
-    container.innerHTML = `<div class="small">${emptyMessage}</div>`;
-    return;
-  }
+const container = document.getElementById(containerId);
 
-  const grid = el("div", {class:"bracket-grid"});
+if(roundGroups.length===0){
+container.innerHTML=`<div class="small">${emptyMessage}</div>`;
+return;
+}
 
-  roundGroups.forEach(group=>{
-    const col = el("div", {class:"round-col"});
-    col.appendChild(el("h3", {}, escapeHtml(group.round === "GF" ? "Grand Final" : group.round)));
+const grid = el("div",{class:"bracket-grid"});
 
-    group.matches.forEach(match=>{
-      const wrapper = document.createElement("div");
-      wrapper.innerHTML = renderMatch(match);
-      col.appendChild(wrapper.firstElementChild);
-    });
+roundGroups.forEach((group,roundIndex)=>{
 
-    grid.appendChild(col);
-  });
+const col = el("div",{class:"round-col"});
 
-  container.innerHTML = "";
-  container.appendChild(grid);
+col.appendChild(
+el("h3",{},escapeHtml(group.round==="GF"?"Grand Final":group.round))
+);
+
+const matchesWrap = el("div",{class:"matches-wrap"});
+
+const baseMatchHeight = 96;
+const baseGap = 16;
+
+const topPadding =
+roundIndex===0
+?0
+:((baseMatchHeight+baseGap)*Math.pow(2,roundIndex-1))/2;
+
+const gapBetweenMatches =
+roundIndex===0
+?baseGap
+:(baseMatchHeight+baseGap)*Math.pow(2,roundIndex)-baseMatchHeight;
+
+matchesWrap.style.paddingTop = `${topPadding}px`;
+
+group.matches.forEach((match,i)=>{
+
+const wrapper = document.createElement("div");
+
+wrapper.style.marginBottom =
+i===group.matches.length-1
+?"0px"
+:`${gapBetweenMatches}px`;
+
+wrapper.innerHTML = renderMatch(match);
+
+matchesWrap.appendChild(wrapper.firstElementChild);
+
+});
+
+col.appendChild(matchesWrap);
+
+grid.appendChild(col);
+
+});
+
+container.innerHTML="";
+container.appendChild(grid);
+
 }
 
 function render(){
-  const winnersContent = document.getElementById("winnersContent");
-  const losersContent = document.getElementById("losersContent");
-  const finalContent = document.getElementById("finalContent");
 
-  if(!results){
-    winnersContent.innerHTML = `<div class="error">No results loaded yet.</div>`;
-    losersContent.innerHTML = `<div class="small">No results loaded yet.</div>`;
-    finalContent.innerHTML = `<div class="small">No results loaded yet.</div>`;
-    return;
-  }
+const winnersContent = document.getElementById("winnersContent");
+const losersContent = document.getElementById("losersContent");
+const finalContent = document.getElementById("finalContent");
 
-  const div = results[activeDiv];
-  if(!div){
-    winnersContent.innerHTML = `<div class="error">Division not found in results_public.json: ${escapeHtml(activeDiv)}</div>`;
-    losersContent.innerHTML = "";
-    finalContent.innerHTML = "";
-    return;
-  }
+if(!results){
+winnersContent.innerHTML=`<div class="error">No results loaded yet.</div>`;
+return;
+}
 
-  const matches = div.matches || [];
-  const grouped = classifyRounds(matches);
+const div = results[activeDiv];
 
-  renderBracketSection("winnersContent", grouped.winners, "No winners bracket matches yet.");
-  renderBracketSection("losersContent", grouped.losers, "No losers bracket matches yet.");
-  renderBracketSection("finalContent", grouped.finals, "No grand final yet.");
+if(!div){
+winnersContent.innerHTML=`<div class="error">Division not found</div>`;
+return;
+}
 
-  document.getElementById("lastUpdated").textContent =
-    results._meta?.updatedAt ? `Updated: ${results._meta.updatedAt}` : "Updated: (timestamp missing)";
+const matches = div.matches || [];
+
+const grouped = classifyRounds(matches);
+
+renderBracketSection(
+"winnersContent",
+grouped.winners,
+"No winners bracket matches yet."
+);
+
+renderBracketSection(
+"losersContent",
+grouped.losers,
+"No losers bracket matches yet."
+);
+
+renderBracketSection(
+"finalContent",
+grouped.finals,
+"No final yet."
+);
+
+document.getElementById("lastUpdated").textContent =
+results._meta?.updatedAt
+?`Updated: ${results._meta.updatedAt}`
+:"Updated: (timestamp missing)";
+
 }
 
 async function loadResults(){
-  try{
-    const r = await fetch("results_public.json?cb=" + Date.now(), {cache:"no-store"});
-    if(!r.ok) throw new Error("HTTP " + r.status);
-    results = await r.json();
-    renderTabs();
-    render();
-  }catch(e){
-    document.getElementById("winnersContent").innerHTML =
-      `<div class="error"><b>Could not load results_public.json</b><br>
-      Make sure viewer.html and results_public.json are in the same public folder.<br>
-      Error: ${escapeHtml(e.message || e)}</div>`;
-    document.getElementById("losersContent").innerHTML = "";
-    document.getElementById("finalContent").innerHTML = "";
-  }
+
+try{
+
+const r = await fetch(
+"results_public.json?cb="+Date.now(),
+{cache:"no-store"}
+);
+
+if(!r.ok) throw new Error("HTTP "+r.status);
+
+results = await r.json();
+
+renderTabs();
+render();
+
+}catch(e){
+
+document.getElementById("winnersContent").innerHTML=
+`<div class="error">
+<b>Could not load results_public.json</b><br>
+Make sure viewer.html and results_public.json are in the same folder.
+</div>`;
+
+}
+
 }
 
 loadResults();
-setInterval(loadResults, 30000);
+setInterval(loadResults,30000);
+
 </script>
+
 </body>
 </html>
