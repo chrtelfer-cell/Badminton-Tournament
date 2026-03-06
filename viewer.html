@@ -338,11 +338,11 @@ function buildPredecessorMap(matches){
   const predMap = {};
 
   matches.forEach(m => {
-    if(m.nextWin?.matchId){
+    if(m.nextWin && m.nextWin.matchId){
       if(!predMap[m.nextWin.matchId]) predMap[m.nextWin.matchId] = [];
       predMap[m.nextWin.matchId].push(m.id);
     }
-    if(m.nextLose?.matchId){
+    if(m.nextLose && m.nextLose.matchId){
       if(!predMap[m.nextLose.matchId]) predMap[m.nextLose.matchId] = [];
       predMap[m.nextLose.matchId].push(m.id);
     }
@@ -351,56 +351,57 @@ function buildPredecessorMap(matches){
   return predMap;
 }
 
-function roundSortValue(round){
-  if(round === "GF") return 1000;
-
-  const type = round[0];
-  const num = parseInt(round.slice(1), 10) || 0;
-
-  if(type === "W") return num;
-  if(type === "L") return 100 + num;
-
-  return 999;
+function buildMatchMap(matches){
+  const map = {};
+  matches.forEach(m => {
+    map[m.id] = m;
+  });
+  return map;
 }
 
-function computeGlobalPositions(allMatches){
-  const positionsById = {};
-  const predMap = buildPredecessorMap(allMatches);
+function computeAllPositions(matches){
+  const positions = {};
+  const predMap = buildPredecessorMap(matches);
+  const matchMap = buildMatchMap(matches);
 
-  const grouped = {};
-  allMatches.forEach(m => {
-    const r = m.round || "Round";
-    if(!grouped[r]) grouped[r] = [];
-    grouped[r].push(m);
+  const winnersR1 = matches.filter(m => m.round === "W1");
+  winnersR1.forEach((m, i) => {
+    positions[m.id] = i * (MATCH_HEIGHT + ROUND1_GAP);
   });
 
-  const orderedRounds = Object.keys(grouped).sort((a, b) => roundSortValue(a) - roundSortValue(b));
+  const visiting = new Set();
 
-  const winnerRound1 = grouped["W1"] || [];
+  function getPosition(matchId){
+    if(positions[matchId] !== undefined) return positions[matchId];
+    if(visiting.has(matchId)) return 0;
 
-  winnerRound1.forEach((m, i) => {
-    positionsById[m.id] = i * (MATCH_HEIGHT + ROUND1_GAP);
-  });
+    visiting.add(matchId);
 
-  for(const round of orderedRounds){
-    for(const [i, m] of grouped[round].entries()){
-      if(positionsById[m.id] !== undefined) continue;
+    const match = matchMap[matchId];
+    const preds = predMap[matchId] || [];
+    const predPositions = preds
+      .map(id => getPosition(id))
+      .filter(v => v !== undefined && v !== null);
 
-      const preds = predMap[m.id] || [];
-      const knownPreds = preds.filter(id => positionsById[id] !== undefined);
+    let y;
 
-      if(knownPreds.length >= 2){
-        positionsById[m.id] =
-          knownPreds.reduce((sum, id) => sum + positionsById[id], 0) / knownPreds.length;
-      } else if(knownPreds.length === 1){
-        positionsById[m.id] = positionsById[knownPreds[0]];
-      } else {
-        positionsById[m.id] = i * (MATCH_HEIGHT + ROUND1_GAP);
-      }
+    if(predPositions.length >= 2){
+      y = predPositions.reduce((a, b) => a + b, 0) / predPositions.length;
+    } else if(predPositions.length === 1){
+      y = predPositions[0];
+    } else {
+      const sameRound = matches.filter(m => m.round === match.round);
+      const index = sameRound.findIndex(m => m.id === matchId);
+      y = Math.max(0, index) * (MATCH_HEIGHT + ROUND1_GAP);
     }
+
+    positions[matchId] = y;
+    visiting.delete(matchId);
+    return y;
   }
 
-  return positionsById;
+  matches.forEach(m => getPosition(m.id));
+  return positions;
 }
 
 function renderBracketSection(containerId, roundGroups, emptyMessage, allMatches){
@@ -411,17 +412,19 @@ function renderBracketSection(containerId, roundGroups, emptyMessage, allMatches
     return;
   }
 
-  const positionsById = computeGlobalPositions(allMatches);
+  const positionsById = computeAllPositions(allMatches);
   const grid = el("div", { class: "bracket-grid" });
 
-  const usedYs = [];
+  const ys = [];
   roundGroups.forEach(group => {
-    group.matches.forEach(m => {
-      if(positionsById[m.id] !== undefined) usedYs.push(positionsById[m.id]);
+    group.matches.forEach(match => {
+      if(positionsById[match.id] !== undefined){
+        ys.push(positionsById[match.id]);
+      }
     });
   });
 
-  const baseHeight = usedYs.length ? Math.max(...usedYs) + MATCH_HEIGHT : MATCH_HEIGHT;
+  const baseHeight = ys.length ? Math.max(...ys) + MATCH_HEIGHT : MATCH_HEIGHT;
 
   roundGroups.forEach(group => {
     const col = el("div", { class: "round-col" });
