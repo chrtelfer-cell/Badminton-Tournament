@@ -16,6 +16,8 @@
   --win-border:#9fdfb3;
 }
 
+*{ box-sizing:border-box; }
+
 body{
   font-family:system-ui,Segoe UI,Arial,sans-serif;
   margin:14px;
@@ -31,7 +33,7 @@ body{
 
 h1{
   margin:0 0 6px;
-  font-size:1.6rem;
+  font-size:1.5rem;
 }
 
 .sub{
@@ -94,16 +96,16 @@ h1{
 
 .bracket-grid{
   display:flex;
-  gap:20px;
+  gap:18px;
   align-items:flex-start;
   min-width:max-content;
   padding-bottom:4px;
 }
 
 .round-col{
-  width:190px;
-  min-width:190px;
-  flex:0 0 190px;
+  width:200px;
+  min-width:200px;
+  flex:0 0 200px;
 }
 
 .round-col h3{
@@ -113,14 +115,17 @@ h1{
   text-align:center;
 }
 
-.matches-wrap{
-  position:relative;
+.round-stack{
+  display:flex;
+  flex-direction:column;
 }
 
-.match-pos{
-  position:absolute;
-  left:0;
-  right:0;
+.match-shell{
+  margin-top:10px;
+}
+
+.match-shell:first-child{
+  margin-top:0 !important;
 }
 
 .match{
@@ -198,9 +203,9 @@ h1{
 
 @media (max-width: 900px){
   .round-col{
-    width:175px;
-    min-width:175px;
-    flex-basis:175px;
+    width:180px;
+    min-width:180px;
+    flex-basis:180px;
   }
 }
 </style>
@@ -250,25 +255,6 @@ const DIV_KEYS = [
 
 let results = null;
 let activeDiv = DIV_KEYS[0];
-
-const MATCH_HEIGHT = 78;
-const DEFAULT_STEP = 90;
-
-const ROUND_STEPS = {
-  W1: 82,
-  W2: 164,
-  W3: 328,
-  W4: 656,
-
-  L1: 82,
-  L2: 110,
-  L3: 164,
-  L4: 220,
-  L5: 328,
-  L6: 440,
-
-  GF: 82
-};
 
 function escapeHtml(s){
   return String(s)
@@ -365,12 +351,26 @@ function renderMatch(match){
   `;
 }
 
-function getRoundStep(round){
-  return ROUND_STEPS[round] || DEFAULT_STEP;
-}
+function getGapBefore(round, index){
+  if(index === 0) return 0;
 
-function getRoundTop(round, index){
-  return index * getRoundStep(round);
+  const gapMap = {
+    W1: 10,
+    W2: 34,
+    W3: 78,
+    W4: 150,
+
+    L1: 10,
+    L2: 18,
+    L3: 30,
+    L4: 46,
+    L5: 74,
+    L6: 110,
+
+    GF: 10
+  };
+
+  return gapMap[round] || 14;
 }
 
 function renderBracketSection(containerId, roundGroups, emptyMessage){
@@ -383,28 +383,20 @@ function renderBracketSection(containerId, roundGroups, emptyMessage){
 
   const grid = el("div", { class:"bracket-grid" });
 
-  let tallest = MATCH_HEIGHT;
-  roundGroups.forEach(group=>{
-    const groupHeight = ((group.matches.length - 1) * getRoundStep(group.round)) + MATCH_HEIGHT;
-    if(groupHeight > tallest) tallest = groupHeight;
-  });
-
   roundGroups.forEach(group=>{
     const col = el("div", { class:"round-col" });
     col.appendChild(el("h3", {}, escapeHtml(group.round === "GF" ? "Grand Final" : group.round)));
 
-    const matchesWrap = el("div", { class:"matches-wrap" });
-    matchesWrap.style.height = `${tallest}px`;
+    const stack = el("div", { class:"round-stack" });
 
     group.matches.forEach((match, index)=>{
-      const wrapper = document.createElement("div");
-      wrapper.className = "match-pos";
-      wrapper.style.top = `${getRoundTop(group.round, index)}px`;
-      wrapper.innerHTML = renderMatch(match);
-      matchesWrap.appendChild(wrapper);
+      const shell = el("div", { class:"match-shell" });
+      shell.style.marginTop = `${getGapBefore(group.round, index)}px`;
+      shell.innerHTML = renderMatch(match);
+      stack.appendChild(shell);
     });
 
-    col.appendChild(matchesWrap);
+    col.appendChild(stack);
     grid.appendChild(col);
   });
 
