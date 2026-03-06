@@ -331,34 +331,39 @@ function sortRoundGroups(obj){
     .map(key => ({ round:key, matches:obj[key] }));
 }
 
-function buildIncomingSlotLabels(matches){
-  const slotLabels = {};
-
-  for(const m of matches){
-    if(m.nextWin && m.nextWin.matchId){
-      const key = `${m.nextWin.matchId}::${m.nextWin.slot}`;
-      slotLabels[key] = `Winner of ${m.id}`;
+function getFeedLabel(matches, matchId, slotNumber){
+  for(const source of matches){
+    if(
+      source.nextWin &&
+      source.nextWin.matchId === matchId &&
+      Number(source.nextWin.slot) === Number(slotNumber)
+    ){
+      return `Winner of ${source.id}`;
     }
 
-    if(m.nextLose && m.nextLose.matchId){
-      const key = `${m.nextLose.matchId}::${m.nextLose.slot}`;
-      slotLabels[key] = `Loser of ${m.id}`;
+    if(
+      source.nextLose &&
+      source.nextLose.matchId === matchId &&
+      Number(source.nextLose.slot) === Number(slotNumber)
+    ){
+      return `Loser of ${source.id}`;
     }
   }
 
-  return slotLabels;
+  return "TBD";
 }
 
-function getDisplayName(match, slotNumber, slotLabels){
+function getDisplayName(matches, match, slotNumber){
   const actualName = slotNumber === 1 ? match.team1 : match.team2;
-  if(actualName) return { text: actualName, placeholder: false };
 
-  const key = `${match.id}::${slotNumber}`;
-  if(slotLabels[key]){
-    return { text: slotLabels[key], placeholder: true };
+  if(actualName){
+    return { text: actualName, placeholder: false };
   }
 
-  return { text: "TBD", placeholder: true };
+  return {
+    text: getFeedLabel(matches, match.id, slotNumber),
+    placeholder: true
+  };
 }
 
 function renderTeam(display, winner){
@@ -370,9 +375,9 @@ function renderTeam(display, winner){
   `;
 }
 
-function renderMatch(match, slotLabels){
-  const team1Display = getDisplayName(match, 1, slotLabels);
-  const team2Display = getDisplayName(match, 2, slotLabels);
+function renderMatch(matches, match){
+  const team1Display = getDisplayName(matches, match, 1);
+  const team2Display = getDisplayName(matches, match, 2);
 
   const winner = match.winner || null;
   const aWin = winner && winner === match.team1;
@@ -441,7 +446,7 @@ function getSectionHeight(roundGroups, type){
   return tallest;
 }
 
-function renderBracketSection(containerId, roundGroups, emptyMessage, type, slotLabels){
+function renderBracketSection(containerId, roundGroups, emptyMessage, type, matches){
   const container = document.getElementById(containerId);
 
   if(roundGroups.length === 0){
@@ -473,7 +478,7 @@ function renderBracketSection(containerId, roundGroups, emptyMessage, type, slot
       const holder = document.createElement("div");
       holder.className = "match-pos";
       holder.style.top = `${top}px`;
-      holder.innerHTML = renderMatch(match, slotLabels);
+      holder.innerHTML = renderMatch(matches, match);
       wrap.appendChild(holder);
     });
 
@@ -507,14 +512,13 @@ function render(){
 
   const matches = div.matches || [];
   const grouped = classifyRounds(matches);
-  const slotLabels = buildIncomingSlotLabels(matches);
 
   renderBracketSection(
     "winnersContent",
     grouped.winners,
     "No winners bracket matches yet.",
     "winners",
-    slotLabels
+    matches
   );
 
   renderBracketSection(
@@ -522,7 +526,7 @@ function render(){
     grouped.losers,
     "No losers bracket matches yet.",
     "losers",
-    slotLabels
+    matches
   );
 
   renderBracketSection(
@@ -530,7 +534,7 @@ function render(){
     grouped.finals,
     "No final yet.",
     "finals",
-    slotLabels
+    matches
   );
 
   document.getElementById("lastUpdated").textContent =
